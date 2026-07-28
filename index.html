@@ -1,1439 +1,1680 @@
-\<!doctype html>
-<html lang="en" dir="ltr">
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sh studio | Custom Web Experiences</title>
+    <title>NOVA PROJECT — Creative & Technology Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@450;700;800&family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"
       rel="stylesheet"
     />
-
     <style>
-      /* Premium Dark Mode Theme (Major: Black, Minor: White) */
       :root {
-        --bg-color: #0a0a0a;
-        --text-color: #ffffff;
-        --accent-color: #141414;
-        --border-color: #262626;
-        --font-heading: "Syne", sans-serif;
-        --font-body: "Inter", sans-serif;
-        --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        --bg: #0a0a0a;
+        --bg-elevated: #111111;
+        --text: #f5f5f5;
+        --text-muted: #888;
+        --accent: #c8ff00;
+        --hack: #00ff41;
+        --hack-dim: rgba(0, 255, 65, 0.15);
+        --border: rgba(255, 255, 255, 0.08);
+        --radius: 12px;
       }
-
-      /* Arabic Override Font Support */
-      body[lang="ar"] {
-        --font-heading: "Cairo", sans-serif;
-        --font-body: "Cairo", sans-serif;
-      }
-
-      /* Reset & Base Styles */
-      * {
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
       }
-
-      body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-family: var(--font-body);
-        line-height: 1.6;
-        overflow-x: hidden;
+      html {
         scroll-behavior: smooth;
       }
-
-      a {
-        text-decoration: none;
-        color: inherit;
-        cursor: pointer;
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
       }
 
-      /* Navigation */
+      /* MATRIX INTRO */
+      #matrix-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 1s ease,
+          visibility 1s ease;
+      }
+      #matrix-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #matrix-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .decrypt-center {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        pointer-events: none;
+      }
+      .decrypt-title {
+        font-family: "Share Tech Mono", monospace;
+        font-size: clamp(2rem, 8vw, 4.5rem);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--hack);
+        text-shadow:
+          0 0 20px rgba(0, 255, 65, 0.6),
+          0 0 40px rgba(0, 255, 65, 0.3);
+        margin-bottom: 1rem;
+      }
+      .decrypt-sub {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.25em;
+        color: rgba(0, 255, 65, 0.55);
+        text-transform: uppercase;
+      }
+      .decrypt-bar {
+        width: min(220px, 50vw);
+        height: 2px;
+        background: rgba(0, 255, 65, 0.15);
+        margin: 1.75rem auto 0;
+        overflow: hidden;
+      }
+      .decrypt-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--hack);
+        box-shadow: 0 0 12px var(--hack);
+        transition: width 0.15s linear;
+      }
+
       nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1.5rem 5%;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        background: rgba(10, 10, 10, 0.9);
-        backdrop-filter: blur(15px);
-        z-index: 100;
-        border-bottom: 1px solid transparent;
-        transition: var(--transition);
+        padding: 1.25rem 2rem;
+        mix-blend-mode: difference;
+        pointer-events: none;
       }
-
-      nav:hover {
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      /* Logo Styling */
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+      nav a,
+      nav button {
+        pointer-events: auto;
+        color: var(--text);
         text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
       }
-
-      .logo-img {
-        height: 45px;
-        width: auto;
-        object-fit: contain;
-        /* Inverting black logo artwork to white for the dark mode theme */
-        filter: invert(1);
-        transition: var(--transition);
+      .logo {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
       }
-
-      .logo:hover .logo-img {
-        transform: scale(1.03);
-      }
-
-      .nav-links {
+      .nav-right {
         display: flex;
         gap: 2rem;
         align-items: center;
       }
+      .nav-cta {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 0.5rem 1.1rem;
+        border-radius: 999px;
+        transition: 0.25s;
+      }
+      .nav-cta:hover {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+      }
 
-      .nav-links a {
-        font-size: 0.9rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+      .hero {
         position: relative;
-      }
-
-      body[lang="ar"] .nav-links a {
-        text-transform: none;
-      }
-
-      .nav-links a::after {
-        content: "";
-        position: absolute;
-        width: 0;
-        height: 1px;
-        bottom: -4px;
-        left: 0;
-        background-color: var(--text-color);
-        transition: var(--transition);
-      }
-
-      .nav-links a:hover::after {
-        width: 100%;
-      }
-
-      /* Language Selector Styling */
-      .lang-select-wrapper {
-        position: relative;
-        display: inline-block;
-      }
-
-      .lang-select {
-        background: transparent;
-        border: 1px solid var(--border-color);
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-family: var(--font-body);
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--text-color);
-        cursor: pointer;
-        transition: var(--transition);
-        outline: none;
-      }
-
-      .lang-select:hover,
-      .lang-select:focus {
-        border-color: var(--text-color);
-      }
-
-      .lang-select option {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-      }
-
-      .btn-login {
-        border: 1px solid var(--text-color);
-        padding: 0.5rem 1.5rem;
-        border-radius: 50px;
-        transition: var(--transition);
-      }
-
-      .btn-login:hover {
-        background-color: var(--text-color);
-        color: var(--bg-color);
-      }
-
-      /* Main Single-Page Layout Sections */
-      section {
-        padding: 8rem 5% 5rem 5%;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        border-bottom: 1px solid var(--border-color);
+        justify-content: flex-end;
+        padding: 0 2rem 4rem;
+        overflow: hidden;
       }
-
-      /* Hero Section */
-      .hero {
-        padding-top: 100px;
-        height: 100vh;
+      /* Hacking rain BEHIND the 3D model */
+      #hero-matrix {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.45;
+        pointer-events: none;
       }
-
-      h1 {
-        font-family: var(--font-heading);
-        font-size: clamp(3.5rem, 7vw, 9rem);
-        font-weight: 800;
-        line-height: 0.9;
-        letter-spacing: -0.03em;
-        margin-bottom: 2rem;
-        text-transform: uppercase;
+      #canvas-container {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
       }
-
-      body[lang="ar"] h1 {
-        text-transform: none;
-      }
-
-      h1 span {
+      #canvas-container canvas {
+        width: 100% !important;
+        height: 100% !important;
         display: block;
-        color: #666;
-        margin-left: 4%;
       }
-
-      body[lang="ar"] h1 span {
-        margin-left: 0;
-        margin-right: 4%;
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1100px;
       }
-
-      .hero-subtitle {
-        font-size: 1.2rem;
-        max-width: 600px;
-        color: #aaa;
-        margin-bottom: 3rem;
-        margin-left: 4%;
-      }
-
-      body[lang="ar"] .hero-subtitle {
-        margin-left: 0;
-        margin-right: 4%;
-      }
-
-      .section-title {
-        font-family: var(--font-heading);
-        font-size: clamp(2.5rem, 5vw, 4rem);
-        margin-bottom: 1rem;
-        letter-spacing: -1px;
+      .hero-eyebrow {
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      .hero-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(3.2rem, 9vw, 7.5rem);
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        margin-bottom: 1.5rem;
+      }
+      .hero-title .line {
+        display: block;
+        overflow: hidden;
+      }
+      .hero-title .line span {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(110%);
+      }
+      .hero-sub {
+        font-size: clamp(1rem, 2.2vw, 1.25rem);
+        color: var(--text-muted);
+        max-width: 480px;
+        margin-bottom: 3rem;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      .scroll-hint {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        opacity: 0;
+      }
+      .scroll-hint .arrow {
+        animation: bounce 1.6s infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(6px);
+        }
       }
 
-      body[lang="ar"] .section-title {
-        text-transform: none;
+      section {
+        padding: 7rem 2rem;
+      }
+      .section-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 1.25rem;
+      }
+      .section-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2.2rem, 5vw, 3.8rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
       }
 
-      .section-desc {
-        color: #aaa;
-        font-size: 1.1rem;
-        max-width: 600px;
-        margin-bottom: 4rem;
-      }
-
-      /* Smart UI: Why Choose Us & Domains Grid */
-      .features-grid,
-      .domains-grid {
+      .about-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+      }
+      @media (max-width: 800px) {
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .about-text p {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        margin-bottom: 1.25rem;
+      }
+      .about-link {
+        display: inline-flex;
+        gap: 0.5rem;
+        color: var(--text);
+        font-weight: 500;
+        margin-top: 1rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 0;
+        border-bottom: 1px solid transparent;
+        transition: 0.2s;
+      }
+      .about-link:hover {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .about-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+      .stat-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      .stat-number {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+      }
+
+      .trusted {
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+      .trusted-title {
+        text-align: center;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 2.5rem;
+      }
+      .logo-marquee {
+        overflow: hidden;
+        mask-image: linear-gradient(
+          90deg,
+          transparent,
+          #000 10%,
+          #000 90%,
+          transparent
+        );
+      }
+      .logo-track {
+        display: flex;
+        gap: 4rem;
+        width: max-content;
+        animation: marquee 28s linear infinite;
+      }
+      .logo-track span {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.35);
+        white-space: nowrap;
+      }
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      .work-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .work-link {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 2px;
+        transition: 0.2s;
+      }
+      .work-link:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+      }
+      .work-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: 0.3s;
+      }
+      .work-card:hover {
+        border-color: rgba(200, 255, 0, 0.35);
+        transform: translateY(-4px);
+      }
+      .work-visual {
+        aspect-ratio: 16/10;
+        background: #0d0d0d;
+        position: relative;
+        overflow: hidden;
+      }
+      .work-visual img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .work-card:hover .work-visual img {
+        transform: scale(1.06);
+      }
+      .work-visual::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.45),
+          transparent 55%
+        );
+        pointer-events: none;
+      }
+      .work-body {
+        padding: 1.35rem 1.5rem 1.5rem;
+      }
+      .work-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .work-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .tag {
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+      }
+      .tag.accent {
+        color: var(--accent);
+        border-color: rgba(200, 255, 0, 0.35);
+      }
+
+      .services-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 2.5rem;
+      }
+      .service-pill {
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.85rem 1.4rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text);
+        cursor: default;
+        font-family: inherit;
+        opacity: 0;
+        transform: scale(0.9);
+        transition: 0.25s;
+      }
+      .service-pill:hover {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+        transform: scale(1.03);
+      }
+
+      .awards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .award-block {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      .award-org {
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+      }
+      .award-list {
+        list-style: none;
+      }
+      .award-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.95rem;
+      }
+      .award-list li:last-child {
+        border-bottom: none;
+      }
+      .award-count {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+
+      .cta {
+        text-align: center;
+        padding: 8rem 2rem;
+      }
+      .cta-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+      }
+      .cta-sub {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+      }
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: var(--accent);
+        color: #000;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 1rem 2rem;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.25s;
+      }
+      .cta-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 0 40px rgba(200, 255, 0, 0.35);
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 3rem 2rem 2.5rem;
+      }
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
         gap: 2rem;
       }
-
-      .feature-card,
-      .domain-card {
-        background: var(--accent-color);
-        border: 1px solid var(--border-color);
-        padding: 2.5rem;
-        border-radius: 12px;
-        transition: var(--transition);
+      .footer-brand {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
       }
-
-      .feature-card:hover,
-      .domain-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--text-color);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-      }
-
-      .feature-number,
-      .domain-tag {
-        font-family: var(--font-heading);
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: #555;
-        margin-bottom: 1.5rem;
-      }
-
-      .feature-card h3,
-      .domain-card h3 {
-        font-family: var(--font-heading);
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-      }
-
-      body[lang="ar"] .feature-card h3,
-      body[lang="ar"] .domain-card h3 {
-        text-transform: none;
-      }
-
-      .feature-card p,
-      .domain-card p {
-        color: #aaa;
-        font-size: 0.95rem;
-        margin-bottom: 1.5rem;
-      }
-
-      .domain-features {
-        list-style: none;
-        color: #888;
-        font-size: 0.85rem;
-        border-top: 1px solid var(--border-color);
-        padding-top: 1rem;
-      }
-
-      .domain-features li {
-        padding: 0.25rem 0;
-      }
-
-      /* Fullscreen Pop-In Overlay Wizard Modal */
-      #project-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(10, 10, 10, 0.98);
-        backdrop-filter: blur(20px);
-        z-index: 1000;
+      .footer-links {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--accent);
+      }
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 2.5rem auto 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .reveal {
         opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateY(28px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
       }
-
-      #project-modal.active {
+      .reveal.visible {
         opacity: 1;
-        pointer-events: auto;
-      }
-
-      .modal-content {
-        width: 100%;
-        max-width: 850px;
-        padding: 2rem;
-        position: relative;
-        transform: translateY(20px);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      #project-modal.active .modal-content {
         transform: translateY(0);
       }
 
-      .close-modal {
-        position: absolute;
-        top: -20px;
-        right: 2rem;
+      /* WINDOW MODAL */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        background: rgba(0, 0, 0, 0.78);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.35s;
+      }
+      .modal-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .window {
+        width: 100%;
+        max-width: 560px;
+        max-height: 92vh;
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid rgba(200, 255, 0, 0.22);
+        background: #0e0e0e;
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.8),
+          0 30px 80px rgba(0, 0, 0, 0.7),
+          0 0 100px rgba(200, 255, 0, 0.07);
+        transform: translateY(30px) scale(0.96);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+      }
+      .modal-overlay.open .window {
+        transform: translateY(0) scale(1);
+      }
+      .window-titlebar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.7rem 1rem;
+        background: linear-gradient(180deg, #1a1a1a, #121212);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        user-select: none;
+      }
+      .window-dots {
+        display: flex;
+        gap: 0.45rem;
+      }
+      .window-dots span {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
+      .window-dots .r {
+        background: #ff5f57;
+      }
+      .window-dots .y {
+        background: #febc2e;
+      }
+      .window-dots .g {
+        background: #28c840;
+      }
+      .window-title {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+      }
+      .window-close-btn {
         background: none;
         border: none;
-        font-family: var(--font-heading);
-        font-size: 1.2rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        color: var(--text-color);
-      }
-
-      body[lang="ar"] .close-modal {
-        right: auto;
-        left: 2rem;
-        text-transform: none;
-      }
-
-      /* Wizard Logic Layout */
-      .form-box {
-        background: var(--accent-color);
-        padding: 3rem;
-        border-radius: 16px;
-        border: 1px solid var(--border-color);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-      }
-
-      .form-step {
-        display: none;
-        animation: fadeUp 0.5s ease;
-      }
-
-      .form-step.active {
-        display: block;
-      }
-
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(15px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .step-indicator {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #888;
-        margin-bottom: 2rem;
-        display: block;
-        font-weight: 500;
-      }
-
-      body[lang="ar"] .step-indicator {
-        text-transform: none;
-        letter-spacing: normal;
-      }
-
-      .wizard-intro h3 {
-        font-family: var(--font-heading);
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-      }
-
-      body[lang="ar"] .wizard-intro h3 {
-        text-transform: none;
-      }
-
-      .wizard-intro p {
-        color: #aaa;
-        margin-bottom: 2rem;
+        color: var(--text-muted);
         font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0 0.2rem;
+        line-height: 1;
+        transition: color 0.2s;
       }
-
-      .wizard-intro ul {
-        list-style: none;
-        margin-bottom: 3rem;
-        color: #aaa;
+      .window-close-btn:hover {
+        color: var(--accent);
       }
-
-      .wizard-intro ul li {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid var(--border-color);
+      .window-body {
+        padding: 1.6rem 1.75rem 1.75rem;
+        overflow-y: auto;
+        flex: 1;
       }
-
+      .window-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        color: var(--hack);
+        background: var(--hack-dim);
+        border: 1px solid rgba(0, 255, 65, 0.3);
+        padding: 0.3rem 0.7rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+      .window-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--hack);
+        box-shadow: 0 0 8px var(--hack);
+      }
+      .window-body h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.55rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
+      }
+      .window-sub {
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        margin-bottom: 1.4rem;
+        line-height: 1.55;
+      }
       .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
+        gap: 0.9rem;
       }
-
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .form-group.full-width {
-        grid-column: 1 / -1;
-      }
-
-      label {
-        font-weight: 500;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #888;
-      }
-
-      body[lang="ar"] label {
-        text-transform: none;
-        letter-spacing: normal;
-      }
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 1rem;
-        background: transparent;
-        border: none;
-        border-bottom: 1px solid var(--border-color);
-        font-family: var(--font-body);
-        font-size: 1rem;
-        color: var(--text-color);
-        transition: var(--transition);
-      }
-
-      select {
-        appearance: none;
-        cursor: pointer;
-      }
-
-      select option {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-      }
-
-      input:focus,
-      select:focus,
-      textarea:focus {
-        outline: none;
-        border-bottom-color: var(--text-color);
-      }
-
-      textarea {
-        resize: vertical;
-        min-height: 120px;
-      }
-
-      .checkbox-group {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-
-      .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-        font-size: 0.9rem;
-        color: var(--text-color);
-        text-transform: none;
-      }
-
-      .checkbox-label input[type="checkbox"] {
-        accent-color: var(--text-color);
-        width: 16px;
-        height: 16px;
-      }
-
-      .btn-primary {
-        display: inline-block;
-        background-color: transparent;
-        color: var(--text-color);
-        border: 1px solid var(--text-color);
-        padding: 1rem 3rem;
-        font-family: var(--font-heading);
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: var(--transition);
-        margin-top: 1rem;
-        width: 100%;
-        text-align: center;
-      }
-
-      body[lang="ar"] .btn-primary {
-        text-transform: none;
-        letter-spacing: normal;
-      }
-
-      .btn-primary:hover {
-        background-color: var(--text-color);
-        color: var(--bg-color);
-      }
-
-      /* Footer */
-      footer {
-        padding: 3rem 5%;
-        text-align: center;
-        border-top: 1px solid var(--border-color);
-        font-size: 0.9rem;
-        color: #777;
-      }
-
-      /* Mobile Responsiveness */
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
-        h1 {
-          font-size: clamp(3rem, 12vw, 5rem);
-        }
-        h1 span,
-        .hero-subtitle {
-          margin-left: 0;
-          margin-right: 0;
-        }
+      @media (max-width: 540px) {
         .form-row {
           grid-template-columns: 1fr;
-          gap: 1rem;
         }
-        .form-box {
-          padding: 2rem 1.5rem;
-        }
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group.full {
+        grid-column: 1 / -1;
+      }
+      .form-group label {
+        display: block;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.35rem;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 0.8rem 0.95rem;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.92rem;
+        outline: none;
+        transition: 0.2s;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(200, 255, 0, 0.12);
+      }
+      .form-group textarea {
+        min-height: 95px;
+        resize: vertical;
+      }
+      .form-group select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='%23888'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.9rem center;
+        padding-right: 2rem;
+      }
+      .form-hint {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 0.3rem;
+      }
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+      .form-submit {
+        flex: 1;
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 0.9rem;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.2s;
+      }
+      .form-submit:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 28px rgba(200, 255, 0, 0.35);
+      }
+      .form-secondary {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        padding: 0.9rem 1.2rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.2s;
+      }
+      .form-secondary:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        color: var(--text);
+      }
+      .form-footer {
+        margin-top: 1.15rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+      .form-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .form-success {
+        display: none;
+        text-align: center;
+        padding: 2.5rem 0 1.5rem;
+      }
+      .form-success.show {
+        display: block;
+      }
+      .form-success .check {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: rgba(200, 255, 0, 0.1);
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        font-size: 1.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+      }
+      .form-fields.hide {
+        display: none;
       }
     </style>
   </head>
   <body>
-    <!-- Navigation -->
-    <nav>
-      <a href="#home" class="logo">
-        <!-- Ensure your image file is named logo.png (or change the src attribute below to match your file name) -->
-        <img src="logo.png" alt="sh studio logo" class="logo-img" />
-      </a>
-      <div class="nav-links">
-        <a href="#home" data-i18n="nav_home">Home</a>
-        <a href="#why-us" data-i18n="nav_why">Why Us</a>
-        <a href="#work" data-i18n="nav_work">Work & Domains</a>
-        <a href="#" onclick="openProjectModal()" data-i18n="nav_start"
-          >Start Project</a
-        >
-        <div class="lang-select-wrapper">
-          <select
-            id="langSwitcher"
-            class="lang-select"
-            onchange="changeLanguage(this.value)"
-          >
-            <option value="en" selected>English</option>
-            <option value="fr">Français</option>
-            <option value="ar">العربية</option>
-          </select>
-        </div>
-        <a href="#" class="btn-login" data-i18n="nav_login">Login</a>
-      </div>
-    </nav>
-
-    <!-- 1. Home Section -->
-    <section id="home" class="hero">
-      <h1 data-i18n="hero_title">Digital <span>Excellence</span></h1>
-      <p class="hero-subtitle" data-i18n="hero_subtitle">
-        We craft immersive, high-performance web experiences for brands that
-        refuse to blend in. Push boundaries. Break rules.
-      </p>
-      <div>
-        <a
-          href="#"
-          class="btn-primary"
-          style="width: auto; margin-left: 4%"
-          onclick="openProjectModal()"
-          data-i18n="hero_btn"
-          >Start a Project</a
-        >
-      </div>
-    </section>
-
-    <!-- 2. Why Choose Us Section -->
-    <section id="why-us">
-      <h2 class="section-title" data-i18n="why_title">Why Choose Us</h2>
-      <p class="section-desc" data-i18n="why_desc">
-        We combine elite development speed, modern aesthetic precision, and
-        user-centric architecture.
-      </p>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-number">01</div>
-          <h3 data-i18n="feat_1_title">Unmatched Speed</h3>
-          <p data-i18n="feat_1_desc">
-            Optimized clean codebases that load instantly, ensuring top-tier
-            search visibility and seamless engagement.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-number">02</div>
-          <h3 data-i18n="feat_2_title">Tailored UI/UX</h3>
-          <p data-i18n="feat_2_desc">
-            Custom-built interactive multi-step interfaces engineered
-            specifically to drive conversions and capture attention.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-number">03</div>
-          <h3 data-i18n="feat_3_title">Future Proof</h3>
-          <p data-i18n="feat_3_desc">
-            Built with robust modern standards and scalable framework
-            architectures ready for scale.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. Work & Domains Section -->
-    <section id="work">
-      <h2 class="section-title" data-i18n="work_title">Domains We Build For</h2>
-      <p class="section-desc" data-i18n="work_desc">
-        Explore the diverse industry domains and specialized digital
-        architectures we design and deploy.
-      </p>
-
-      <div class="domains-grid">
-        <div class="domain-card">
-          <div class="domain-tag" data-i18n="dom_1_tag">01 / E-COMMERCE</div>
-          <h3 data-i18n="dom_1_title">Online Stores</h3>
-          <p data-i18n="dom_1_desc">
-            High-converting digital shops featuring smooth checkout flows,
-            dynamic product grids, and inventory management systems.
-          </p>
-          <ul class="domain-features">
-            <li data-i18n="dom_1_f1">Secure Cart & Checkout Integration</li>
-            <li data-i18n="dom_1_f2">Product Filters & Search Optimization</li>
-            <li data-i18n="dom_1_f3">Mobile-First Responsive Layouts</li>
-          </ul>
-        </div>
-
-        <div class="domain-card">
-          <div class="domain-tag" data-i18n="dom_2_tag">02 / CORPORATE</div>
-          <h3 data-i18n="dom_2_title">Business Agencies</h3>
-          <p data-i18n="dom_2_desc">
-            Sleek, authoritative portfolios and company sites designed to build
-            elite brand trust and generate high-value client leads.
-          </p>
-          <ul class="domain-features">
-            <li data-i18n="dom_2_f1">Interactive Service Showcases</li>
-            <li data-i18n="dom_2_f2">Dynamic Client Portfolios</li>
-            <li data-i18n="dom_2_f3">Integrated Lead Capture Forms</li>
-          </ul>
-        </div>
-
-        <div class="domain-card">
-          <div class="domain-tag" data-i18n="dom_3_tag">03 / CREATIVE</div>
-          <h3 data-i18n="dom_3_title">Portfolios & Blogs</h3>
-          <p data-i18n="dom_3_desc">
-            Striking visual platforms for designers, creators, and writers
-            featuring smooth animations and immersive typography.
-          </p>
-          <ul class="domain-features">
-            <li data-i18n="dom_3_f1">Minimal Layouts</li>
-            <li data-i18n="dom_3_f2">CMS / Blog Content Integration</li>
-            <li data-i18n="dom_3_f3">High-Resolution Media Galleries</li>
-          </ul>
-        </div>
-
-        <div class="domain-card">
-          <div class="domain-tag" data-i18n="dom_4_tag">04 / WEB APPS</div>
-          <h3 data-i18n="dom_4_title">SaaS & Dashboards</h3>
-          <p data-i18n="dom_4_desc">
-            Complex, user-authenticated digital web applications with
-            interactive multi-step wizards and real-time state management.
-          </p>
-          <ul class="domain-features">
-            <li data-i18n="dom_4_f1">User Login & Profile Management</li>
-            <li data-i18n="dom_4_f2">Data Dashboards & Analytics</li>
-            <li data-i18n="dom_4_f3">Interactive Form Wizards</li>
-          </ul>
-        </div>
-
-        <div class="domain-card">
-          <div class="domain-tag" data-i18n="dom_5_tag">05 / HOSPITALITY</div>
-          <h3 data-i18n="dom_5_title">Restaurants & Booking</h3>
-          <p data-i18n="dom_5_desc">
-            Appealing digital spaces for food, events, and reservation services
-            with instant scheduling and menu systems.
-          </p>
-          <ul class="domain-features">
-            <li data-i18n="dom_5_f1">Interactive Digital Menus</li>
-            <li data-i18n="dom_5_f2">Reservation & Booking Systems</li>
-            <li data-i18n="dom_5_f3">Location & Hours Integration</li>
-          </ul>
-        </div>
-
-        <div class="domain-card">
-          <div class="domain-tag" data-i18n="dom_6_tag">06 / CUSTOM</div>
-          <h3 data-i18n="dom_6_title">Specialized Projects</h3>
-          <p data-i18n="dom_6_desc">
-            Have a unique concept in mind? We engineer bespoke web solutions
-            tailored precisely to your exact specifications.
-          </p>
-          <ul class="domain-features">
-            <li data-i18n="dom_6_f1">Custom API & Tool Integration</li>
-            <li data-i18n="dom_6_f2">Advanced Micro-Interactions</li>
-            <li data-i18n="dom_6_f3">Tailored Functional Logic</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <p data-i18n="footer_copy">&copy; 2026 sh studio. All rights reserved.</p>
-    </footer>
-
-    <!-- Pop-In Interactive Wizard Overlay Page -->
-    <div id="project-modal">
-      <div class="modal-content">
-        <button
-          class="close-modal"
-          onclick="closeProjectModal()"
-          data-i18n="modal_close"
-        >
-          [ Close X ]
-        </button>
-
-        <div class="form-box" id="wizard-container">
-          <form
-            id="projectForm"
-            onsubmit="
-              event.preventDefault();
-              alert(translations[currentLang].alert_success);
-              closeProjectModal();
-            "
-          >
-            <!-- STEP 1: Intro -->
-            <div class="form-step active" id="step-1">
-              <div class="wizard-intro">
-                <h3 data-i18n="w1_title">Let's dial in the details.</h3>
-                <p data-i18n="w1_desc">
-                  We need to understand your vision before we begin. Click
-                  continue to start the onboarding process.
-                </p>
-                <ul>
-                  <li data-i18n="w1_li1">
-                    <strong>Landing Pages:</strong> Starting at 40,000 DA
-                  </li>
-                  <li data-i18n="w1_li2">
-                    <strong>E-Commerce:</strong> Starting at 150,000 DA
-                  </li>
-                  <li data-i18n="w1_li3">
-                    <strong>Custom Web Apps:</strong> Starting at 300,000 DA+
-                  </li>
-                </ul>
-                <button
-                  type="button"
-                  class="btn-primary"
-                  onclick="nextStep(2)"
-                  data-i18n="btn_continue"
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-
-            <!-- STEP 2: Client Name & Budget -->
-            <div class="form-step" id="step-2">
-              <span class="step-indicator" data-i18n="s1_ind"
-                >Step 1 of 4 — The Basics</span
-              >
-              <div class="form-row">
-                <div class="form-group">
-                  <label data-i18n="lbl_client">Client / Brand Name</label>
-                  <input
-                    type="text"
-                    id="clientNameInput"
-                    placeholder="Acme Corp"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label data-i18n="lbl_budget">Estimated Budget</label>
-                  <select id="budgetSelect" required>
-                    <option
-                      value=""
-                      disabled
-                      selected
-                      data-i18n="opt_budget_default"
-                    >
-                      Select Budget Range
-                    </option>
-                    <option value="40k-100k">40,000 DA - 100,000 DA</option>
-                    <option value="100k-300k">100,000 DA - 300,000 DA</option>
-                    <option value="300k+">300,000 DA+</option>
-                  </select>
-                </div>
-              </div>
-              <button
-                type="button"
-                class="btn-primary"
-                onclick="validateAndNextStep(2, 3)"
-                data-i18n="btn_continue"
-              >
-                Continue
-              </button>
-            </div>
-
-            <!-- STEP 3: Aesthetics -->
-            <div class="form-step" id="step-3">
-              <span class="step-indicator" data-i18n="s2_ind"
-                >Step 2 of 4 — Aesthetics</span
-              >
-              <div class="form-row">
-                <div class="form-group">
-                  <label data-i18n="lbl_style">Primary Design Style</label>
-                  <select id="styleSelect" required>
-                    <option
-                      value=""
-                      disabled
-                      selected
-                      data-i18n="opt_style_default"
-                    >
-                      Choose an aesthetic
-                    </option>
-                    <option value="minimal" data-i18n="opt_style_1">
-                      Minimal & Clean
-                    </option>
-                    <option value="corporate" data-i18n="opt_style_3">
-                      Modern Corporate
-                    </option>
-                    <option value="playful" data-i18n="opt_style_4">
-                      Playful & Colorful
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label data-i18n="lbl_colors">Brand Colors</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Hex codes or general vibes"
-                    required
-                    data-i18n-ph="ph_colors"
-                  />
-                </div>
-              </div>
-              <button
-                type="button"
-                class="btn-primary"
-                onclick="nextStep(4)"
-                data-i18n="btn_continue"
-              >
-                Continue
-              </button>
-            </div>
-
-            <!-- STEP 4: Technical -->
-            <div class="form-step" id="step-4">
-              <span class="step-indicator" data-i18n="s3_ind"
-                >Step 3 of 4 — Technical Details</span
-              >
-              <div class="form-row">
-                <div class="form-group">
-                  <label data-i18n="lbl_theme">UI Theme Preference</label>
-                  <select required>
-                    <option value="light" data-i18n="opt_theme_1">
-                      Light Mode Only
-                    </option>
-                    <option value="dark" data-i18n="opt_theme_2">
-                      Dark Mode Only
-                    </option>
-                    <option value="toggle" data-i18n="opt_theme_3">
-                      User Toggle (Light/Dark)
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label data-i18n="lbl_anim">Animation Level</label>
-                  <select required>
-                    <option value="none" data-i18n="opt_anim_1">
-                      Static (Fastest)
-                    </option>
-                    <option value="subtle" data-i18n="opt_anim_2">
-                      Subtle Transitions
-                    </option>
-                    <option value="heavy" data-i18n="opt_anim_3">
-                      Heavy (Scroll effects, Parallax)
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <button
-                type="button"
-                class="btn-primary"
-                onclick="nextStep(5)"
-                data-i18n="btn_continue"
-              >
-                Continue
-              </button>
-            </div>
-
-            <!-- STEP 5: Features & Submit -->
-            <div class="form-step" id="step-5">
-              <span class="step-indicator" data-i18n="s4_ind"
-                >Step 4 of 4 — Features & Context</span
-              >
-              <div class="form-group full-width">
-                <label data-i18n="lbl_features">Required Features</label>
-                <div class="checkbox-group">
-                  <label class="checkbox-label"
-                    ><input type="checkbox" />
-                    <span data-i18n="chk_1">Contact Form</span></label
-                  >
-                  <label class="checkbox-label"
-                    ><input type="checkbox" />
-                    <span data-i18n="chk_2">CMS / Blog</span></label
-                  >
-                  <label class="checkbox-label"
-                    ><input type="checkbox" />
-                    <span data-i18n="chk_3">User Login</span></label
-                  >
-                  <label class="checkbox-label"
-                    ><input type="checkbox" />
-                    <span data-i18n="chk_4">E-commerce Cart</span></label
-                  >
-                  <label class="checkbox-label"
-                    ><input type="checkbox" />
-                    <span data-i18n="chk_5">Animations</span></label
-                  >
-                  <label class="checkbox-label"
-                    ><input type="checkbox" />
-                    <span data-i18n="chk_6">3D Elements</span></label
-                  >
-                </div>
-              </div>
-              <br />
-              <div class="form-group full-width">
-                <label data-i18n="lbl_context"
-                  >Project Context & Competitors</label
-                >
-                <textarea
-                  placeholder="Tell us more about what you want to achieve..."
-                  required
-                  data-i18n-ph="ph_context"
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                class="btn-primary"
-                style="background: var(--text-color); color: var(--bg-color)"
-                data-i18n="btn_submit"
-              >
-                Submit Proposal
-              </button>
-            </div>
-          </form>
+    <div id="matrix-loader">
+      <canvas id="matrix-canvas"></canvas>
+      <div class="decrypt-center">
+        <div class="decrypt-title" id="decrypt-text">NOVA PROJECT</div>
+        <div class="decrypt-sub" id="decrypt-sub">initializing system…</div>
+        <div class="decrypt-bar">
+          <div class="decrypt-bar-fill" id="decrypt-fill"></div>
         </div>
       </div>
     </div>
 
-    <!-- Smart UI & Multi-Language Translation Script -->
+    <nav>
+      <a href="#" class="logo">NOVA PROJECT</a>
+      <div class="nav-right">
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <button type="button" class="nav-cta" id="nav-contact-btn">
+          Get in touch →
+        </button>
+      </div>
+    </nav>
+
+    <section class="hero" id="hero">
+      <!-- Hacking rain BEHIND the 3D model -->
+      <canvas id="hero-matrix"></canvas>
+      <div id="canvas-container"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">Creative & Technology Studio</p>
+        <h1 class="hero-title">
+          <span class="line"><span>A different</span></span>
+          <span class="line"><span>kind of</span></span>
+          <span class="line"><span>digital.</span></span>
+        </h1>
+        <p class="hero-sub">
+          We craft immersive brands and experiences that feel alive — built with
+          emotion, precision, and a little bit of chaos.
+        </p>
+        <div class="scroll-hint"><span class="arrow">↓</span> Scroll</div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container about-grid">
+        <div>
+          <p class="section-label reveal">About us</p>
+          <h2 class="section-title reveal">
+            We push boundaries<br />with emotion + code.
+          </h2>
+          <div class="about-text">
+            <p class="reveal">
+              Born from a shared obsession with the intersection of design and
+              technology, we help ambitious teams tell stories that stick.
+            </p>
+            <p class="reveal">
+              From brand systems to real-time 3D experiences, every project is
+              an experiment in making the digital feel human.
+            </p>
+            <button
+              type="button"
+              class="about-link reveal"
+              id="about-contact-btn"
+            >
+              Get in touch →
+            </button>
+          </div>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-number" data-count="48">0</div>
+            <div class="stat-label">Projects shipped</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" data-count="12">0</div>
+            <div class="stat-label">Countries reached</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" data-count="6">0</div>
+            <div class="stat-label">Years of craft</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" data-count="9">0</div>
+            <div class="stat-label">Awards won</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trusted">
+      <p class="trusted-title reveal">Trusted by teams who care about craft</p>
+      <div class="logo-marquee">
+        <div class="logo-track">
+          <span>APEX</span><span>LUMEN</span><span>ORBIT</span
+          ><span>VERTEX</span><span>PULSE</span><span>NEXUS</span
+          ><span>HALO</span><span>STRATA</span> <span>APEX</span
+          ><span>LUMEN</span><span>ORBIT</span><span>VERTEX</span
+          ><span>PULSE</span><span>NEXUS</span><span>HALO</span
+          ><span>STRATA</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="container">
+        <div class="work-header">
+          <div>
+            <p class="section-label reveal">Selected work</p>
+            <h2 class="section-title reveal">Featured projects</h2>
+          </div>
+          <a href="#work" class="work-link reveal">All work →</a>
+        </div>
+        <div class="work-grid">
+          <article class="work-card">
+            <div class="work-visual">
+              <img
+                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80"
+                alt="Echo"
+                loading="lazy"
+              />
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Echo Platform</h3>
+              <div class="work-tags">
+                <span class="tag accent">WebGL</span
+                ><span class="tag">Brand</span
+                ><span class="tag">Development</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual">
+              <img
+                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80"
+                alt="Helix"
+                loading="lazy"
+              />
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Helix Identity</h3>
+              <div class="work-tags">
+                <span class="tag accent">3D</span><span class="tag">Design</span
+                ><span class="tag">Motion</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual">
+              <img
+                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80"
+                alt="Orbit"
+                loading="lazy"
+              />
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Orbit Commerce</h3>
+              <div class="work-tags">
+                <span class="tag">UX/UI</span><span class="tag">E-commerce</span
+                ><span class="tag">Development</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual">
+              <img
+                src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
+                alt="Prism"
+                loading="lazy"
+              />
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Prism Studio</h3>
+              <div class="work-tags">
+                <span class="tag accent">WebGL</span
+                ><span class="tag">Art Direction</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual">
+              <img
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
+                alt="Nova OS"
+                loading="lazy"
+              />
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Nova OS</h3>
+              <div class="work-tags">
+                <span class="tag">Product</span><span class="tag">3D</span
+                ><span class="tag">Strategy</span>
+              </div>
+            </div>
+          </article>
+          <article class="work-card">
+            <div class="work-visual">
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80"
+                alt="Lumen"
+                loading="lazy"
+              />
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Lumen Site</h3>
+              <div class="work-tags">
+                <span class="tag">Design</span
+                ><span class="tag">Development</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <p class="section-label reveal">What we do</p>
+        <h2 class="section-title reveal">
+          Elevating brands<br />in unexpected ways.
+        </h2>
+        <div class="services-grid">
+          <button class="service-pill">Brand Identity</button>
+          <button class="service-pill">Digital Experiences</button>
+          <button class="service-pill">WebGL / 3D</button>
+          <button class="service-pill">UX / UI</button>
+          <button class="service-pill">Brand Strategy</button>
+          <button class="service-pill">App Development</button>
+          <button class="service-pill">Web3</button>
+          <button class="service-pill">Art Direction</button>
+          <button class="service-pill">Product Design</button>
+          <button class="service-pill">Motion Design</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="awards">
+      <div class="container">
+        <p class="section-label reveal">Recognition</p>
+        <h2 class="section-title reveal">Awards & honors</h2>
+        <div class="awards-grid">
+          <div class="award-block">
+            <div class="award-org">Awwwards</div>
+            <ul class="award-list">
+              <li>
+                <span>Site of the Day</span><span class="award-count">4</span>
+              </li>
+              <li>
+                <span>Developer Award</span><span class="award-count">2</span>
+              </li>
+              <li>
+                <span>Honorable Mention</span><span class="award-count">6</span>
+              </li>
+            </ul>
+          </div>
+          <div class="award-block">
+            <div class="award-org">FWA</div>
+            <ul class="award-list">
+              <li>
+                <span>FWA of the Day</span><span class="award-count">3</span>
+              </li>
+              <li>
+                <span>Mobile of the Day</span><span class="award-count">1</span>
+              </li>
+            </ul>
+          </div>
+          <div class="award-block">
+            <div class="award-org">CSS Design Awards</div>
+            <ul class="award-list">
+              <li>
+                <span>Site of the Day</span><span class="award-count">5</span>
+              </li>
+              <li><span>UI Award</span><span class="award-count">2</span></li>
+            </ul>
+          </div>
+          <div class="award-block">
+            <div class="award-org">Other</div>
+            <ul class="award-list">
+              <li>
+                <span>Orpetron SOTD</span><span class="award-count">3</span>
+              </li>
+              <li>
+                <span>Behance Feature</span><span class="award-count">8</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contact">
+      <p class="section-label reveal">Next steps</p>
+      <h2 class="cta-title reveal">How about we<br />do a thing or two?</h2>
+      <p class="cta-sub reveal">
+        Tell us about your next project. We’re always looking for ambitious
+        ideas.
+      </p>
+      <button type="button" class="cta-btn reveal" id="cta-contact-btn">
+        Get in touch →
+      </button>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">NOVA PROJECT</div>
+        <div class="footer-links">
+          <a href="#work">Work</a><a href="#services">Services</a
+          ><a href="#about">About</a><a href="#contact">Contact</a
+          ><a href="#">Privacy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 NOVA PROJECT. Built for the curious.</span>
+        <span>Not affiliated with any existing agency.</span>
+      </div>
+    </footer>
+
+    <div class="modal-overlay" id="contact-modal">
+      <div class="window">
+        <div class="window-titlebar">
+          <div class="window-dots">
+            <span class="r"></span><span class="y"></span
+            ><span class="g"></span>
+          </div>
+          <div class="window-title">nova://contact — secure session</div>
+          <button type="button" class="window-close-btn" id="modal-close">
+            ×
+          </button>
+        </div>
+        <div class="window-body">
+          <div class="form-fields" id="form-fields">
+            <div class="window-badge">SECURE CHANNEL</div>
+            <h3>Start a project</h3>
+            <p class="window-sub">
+              Fill in the details. We reply within 24–48h with timeline, next
+              steps and a rough estimate.
+            </p>
+            <form id="contact-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Name *</label
+                  ><input
+                    type="text"
+                    id="name"
+                    required
+                    placeholder="Alex Rivera"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email *</label
+                  ><input
+                    type="email"
+                    id="email"
+                    required
+                    placeholder="alex@company.com"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="company">Company</label
+                  ><input type="text" id="company" placeholder="Your company" />
+                </div>
+                <div class="form-group">
+                  <label for="role">Your role</label>
+                  <select id="role">
+                    <option value="">Select…</option>
+                    <option>Founder / CEO</option>
+                    <option>Marketing</option>
+                    <option>Product</option>
+                    <option>Design</option>
+                    <option>Engineering</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="project-type">Project type</label>
+                  <select id="project-type">
+                    <option value="">Select…</option>
+                    <option>Brand identity</option>
+                    <option>Website / WebGL</option>
+                    <option>E-commerce</option>
+                    <option>Product design</option>
+                    <option>Motion / 3D</option>
+                    <option>Full digital experience</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="budget">Budget range</label>
+                  <select id="budget">
+                    <option value="">Select…</option>
+                    <option>Under $10k</option>
+                    <option>$10k – $25k</option>
+                    <option>$25k – $50k</option>
+                    <option>$50k – $100k</option>
+                    <option>$100k+</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group full">
+                <label for="timeline">Ideal timeline</label>
+                <select id="timeline">
+                  <option value="">Select…</option>
+                  <option>ASAP (under 4 weeks)</option>
+                  <option>1 – 2 months</option>
+                  <option>2 – 4 months</option>
+                  <option>4+ months</option>
+                  <option>Flexible</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label for="message">Project details *</label>
+                <textarea
+                  id="message"
+                  required
+                  placeholder="Goals, audience, references…"
+                ></textarea>
+                <p class="form-hint">More context = better first reply.</p>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="form-secondary" id="modal-cancel">
+                  Cancel
+                </button>
+                <button type="submit" class="form-submit">
+                  Send message →
+                </button>
+              </div>
+              <p class="form-footer">
+                Or email
+                <a href="mailto:hello@novaproject.example"
+                  >hello@novaproject.example</a
+                >
+              </p>
+            </form>
+          </div>
+          <div class="form-success" id="form-success">
+            <div class="check">✓</div>
+            <h3>Message received</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem">
+              We’ll decrypt your brief and get back soon.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-      let currentLang = "en";
-
-      const translations = {
-        en: {
-          nav_home: "Home",
-          nav_why: "Why Us",
-          nav_work: "Work & Domains",
-          nav_start: "Start Project",
-          nav_login: "Login",
-          hero_title: "Digital <span>Excellence</span>",
-          hero_subtitle:
-            "We craft immersive, high-performance web experiences for brands that refuse to blend in. Push boundaries. Break rules.",
-          hero_btn: "Start a Project",
-          why_title: "Why Choose Us",
-          why_desc:
-            "We combine elite development speed, modern aesthetic precision, and user-centric architecture.",
-          feat_1_title: "Unmatched Speed",
-          feat_1_desc:
-            "Optimized clean codebases that load instantly, ensuring top-tier search visibility and seamless engagement.",
-          feat_2_title: "Tailored UI/UX",
-          feat_2_desc:
-            "Custom-built interactive multi-step interfaces engineered specifically to drive conversions and capture attention.",
-          feat_3_title: "Future Proof",
-          feat_3_desc:
-            "Built with robust modern standards and scalable framework architectures ready for scale.",
-          work_title: "Domains We Build For",
-          work_desc:
-            "Explore the diverse industry domains and specialized digital architectures we design and deploy.",
-
-          dom_1_tag: "01 / E-COMMERCE",
-          dom_1_title: "Online Stores",
-          dom_1_desc:
-            "High-converting digital shops featuring smooth checkout flows, dynamic product grids, and inventory management systems.",
-          dom_1_f1: "Secure Cart & Checkout Integration",
-          dom_1_f2: "Product Filters & Search Optimization",
-          dom_1_f3: "Mobile-First Responsive Layouts",
-
-          dom_2_tag: "02 / CORPORATE",
-          dom_2_title: "Business Agencies",
-          dom_2_desc:
-            "Sleek, authoritative portfolios and company sites designed to build elite brand trust and generate high-value client leads.",
-          dom_2_f1: "Interactive Service Showcases",
-          dom_2_f2: "Dynamic Client Portfolios",
-          dom_2_f3: "Integrated Lead Capture Forms",
-
-          dom_3_tag: "03 / CREATIVE",
-          dom_3_title: "Portfolios & Blogs",
-          dom_3_desc:
-            "Striking visual platforms for designers, creators, and writers featuring smooth animations and immersive typography.",
-          dom_3_f1: "Minimal Layouts",
-          dom_3_f2: "CMS / Blog Content Integration",
-          dom_3_f3: "High-Resolution Media Galleries",
-
-          dom_4_tag: "04 / WEB APPS",
-          dom_4_title: "SaaS & Dashboards",
-          dom_4_desc:
-            "Complex, user-authenticated digital web applications with interactive multi-step wizards and real-time state management.",
-          dom_4_f1: "User Login & Profile Management",
-          dom_4_f2: "Data Dashboards & Analytics",
-          dom_4_f3: "Interactive Form Wizards",
-
-          dom_5_tag: "05 / HOSPITALITY",
-          dom_5_title: "Restaurants & Booking",
-          dom_5_desc:
-            "Appealing digital spaces for food, events, and reservation services with instant scheduling and menu systems.",
-          dom_5_f1: "Interactive Digital Menus",
-          dom_5_f2: "Reservation & Booking Systems",
-          dom_5_f3: "Location & Hours Integration",
-
-          dom_6_tag: "06 / CUSTOM",
-          dom_6_title: "Specialized Projects",
-          dom_6_desc:
-            "Have a unique concept in mind? We engineer bespoke web solutions tailored precisely to your exact specifications.",
-          dom_6_f1: "Custom API & Tool Integration",
-          dom_6_f2: "Advanced Micro-Interactions",
-          dom_6_f3: "Tailored Functional Logic",
-
-          footer_copy: "&copy; 2026 sh studio. All rights reserved.",
-          modal_close: "[ Close X ]",
-          w1_title: "Let's dial in the details.",
-          w1_desc:
-            "We need to understand your vision before we begin. Click continue to start the onboarding process.",
-          w1_li1: "<strong>Landing Pages:</strong> Starting at 40,000 DA",
-          w1_li2: "<strong>E-Commerce:</strong> Starting at 150,000 DA",
-          w1_li3: "<strong>Custom Web Apps:</strong> Starting at 300,000 DA+",
-          btn_continue: "Continue",
-          s1_ind: "Step 1 of 4 — The Basics",
-          lbl_client: "Client / Brand Name",
-          lbl_budget: "Estimated Budget",
-          opt_budget_default: "Select Budget Range",
-          s2_ind: "Step 2 of 4 — Aesthetics",
-          lbl_style: "Primary Design Style",
-          opt_style_default: "Choose an aesthetic",
-          opt_style_1: "Minimal & Clean",
-          opt_style_3: "Modern Corporate",
-          opt_style_4: "Playful & Colorful",
-          lbl_colors: "Brand Colors",
-          ph_colors: "e.g. Hex codes or general vibes",
-          s3_ind: "Step 3 of 4 — Technical Details",
-          lbl_theme: "UI Theme Preference",
-          opt_theme_1: "Light Mode Only",
-          opt_theme_2: "Dark Mode Only",
-          opt_theme_3: "User Toggle (Light/Dark)",
-          lbl_anim: "Animation Level",
-          opt_anim_1: "Static (Fastest)",
-          opt_anim_2: "Subtle Transitions",
-          opt_anim_3: "Heavy (Scroll effects, Parallax)",
-          s4_ind: "Step 4 of 4 — Features & Context",
-          lbl_features: "Required Features",
-          chk_1: "Contact Form",
-          chk_2: "CMS / Blog",
-          chk_3: "User Login",
-          chk_4: "E-commerce Cart",
-          chk_5: "Animations",
-          chk_6: "3D Elements",
-          lbl_context: "Project Context & Competitors",
-          ph_context: "Tell us more about what you want to achieve...",
-          btn_submit: "Submit Proposal",
-          alert_success: "Proposal Submitted Successfully!",
-        },
-        fr: {
-          nav_home: "Accueil",
-          nav_why: "Pourquoi Nous",
-          nav_work: "Réalisations",
-          nav_start: "Lancer un Projet",
-          nav_login: "Connexion",
-          hero_title: "Excellence <span>Numérique</span>",
-          hero_subtitle:
-            "Nous créons des expériences web immersives et ultra-performantes pour les marques qui refusent de passer inaperçues.",
-          hero_btn: "Démarrer un Projet",
-          why_title: "Pourquoi Nous Choisir",
-          why_desc:
-            "Nous combinons vitesse de développement élite, précision esthétique moderne et architecture centrée utilisateur.",
-          feat_1_title: "Vitesse Inégalée",
-          feat_1_desc:
-            "Codes sources optimisés et propres se chargeant instantanément, garantissant une visibilité maximale.",
-          feat_2_title: "UI/UX Sur Mesure",
-          feat_2_desc:
-            "Interfaces interactives multi-étapes conçues spécifiquement pour stimuler les conversions et captiver l'attention.",
-          feat_3_title: "Évolutivité Future",
-          feat_3_desc:
-            "Conçu selon des normes modernes et robustes, prêt pour une mise à l'échelle transparente.",
-          work_title: "Domaines d'Intervention",
-          work_desc:
-            "Explorez nos différents domaines d'expertise sectorielle et nos architectures numériques sur mesure.",
-
-          dom_1_tag: "01 / E-COMMERCE",
-          dom_1_title: "Boutiques en Ligne",
-          dom_1_desc:
-            "Magasins numériques à fort taux de conversion dotés de tunnels d'achat fluides et de gestion de stocks.",
-          dom_1_f1: "Panier sécurisé & Paiement intégré",
-          dom_1_f2: "Filtres produits & Optimisation recherche",
-          dom_1_f3: "Mises en page Responsive Mobile-First",
-
-          dom_2_tag: "02 / CORPORATE",
-          dom_2_title: "Agences & Entreprises",
-          dom_2_desc:
-            "Portfolios élégants et sites institutionnels conçus pour inspirer confiance et générer des leads qualifiés.",
-          dom_2_f1: "Présentation interactive des services",
-          dom_2_f2: "Portfolios clients dynamiques",
-          dom_2_f3: "Formulaires de capture de leads intégrés",
-
-          dom_3_tag: "03 / CRÉATIF",
-          dom_3_title: "Portfolios & Blogs",
-          dom_3_desc:
-            "Plateformes visuelles percutantes pour créateurs avec animations fluides et typographie immersive.",
-          dom_3_f1: "Agencements minimalistes",
-          dom_3_f2: "Intégration CMS / Blog",
-          dom_3_f3: "Galeries multimédias haute résolution",
-
-          dom_4_tag: "04 / APPS WEB",
-          dom_4_title: "SaaS & Tableaux de Bord",
-          dom_4_desc:
-            "Applications web complexes avec authentification utilisateur et assistants interactifs multi-étapes.",
-          dom_4_f1: "Connexion utilisateur & Profils",
-          dom_4_f2: "Tableaux de bord analytiques",
-          dom_4_f3: "Assistants de formulaires interactifs",
-
-          dom_5_tag: "05 / RESTAURATION",
-          dom_5_title: "Restaurants & Réservations",
-          dom_5_desc:
-            "Espaces numériques attrayants pour la restauration et les services de réservation avec plannings en temps réel.",
-          dom_5_f1: "Menus numériques interactifs",
-          dom_5_f2: "Systèmes de réservation en ligne",
-          dom_5_f3: "Intégration horaires & localisation",
-
-          dom_6_tag: "06 / SUR MESURE",
-          dom_6_title: "Projets Spécialisés",
-          dom_6_desc:
-            "Vous avez un concept unique ? Nous concevons des solutions web sur mesure adaptées à vos besoins exacts.",
-          dom_6_f1: "Intégration d'API & Outils personnalisés",
-          dom_6_f2: "Micro-interactions avancées",
-          dom_6_f3: "Logique fonctionnelle sur mesure",
-
-          footer_copy: "&copy; 2026 sh studio. Tous droits réservés.",
-          modal_close: "[ Fermer X ]",
-          w1_title: "Précisons les détails.",
-          w1_desc:
-            "Nous devons comprendre votre vision avant de commencer. Cliquez sur continuer pour lancer l'intégration.",
-          w1_li1: "<strong>Landing Pages :</strong> À partir de 40 000 DA",
-          w1_li2: "<strong>E-Commerce :</strong> À partir de 150 000 DA",
-          w1_li3: "<strong>Applications Web :</strong> À partir de 300 000 DA+",
-          btn_continue: "Continuer",
-          s1_ind: "Étape 1 sur 4 — Les Bases",
-          lbl_client: "Nom du Client / Marque",
-          lbl_budget: "Budget Estimé",
-          opt_budget_default: "Sélectionnez une fourchette",
-          s2_ind: "Étape 2 sur 4 — Esthétique",
-          lbl_style: "Style de Design Principal",
-          opt_style_default: "Choisissez une esthétique",
-          opt_style_1: "Minimal & Épuré",
-          opt_style_3: "Corporate Moderne",
-          opt_style_4: "Ludique & Coloré",
-          lbl_colors: "Couleurs de la Marque",
-          ph_colors: "ex: Codes Hex ou ambiance générale",
-          s3_ind: "Étape 3 sur 4 — Détails Techniques",
-          lbl_theme: "Préférence de Thème UI",
-          opt_theme_1: "Mode Clair Uniquement",
-          opt_theme_2: "Mode Sombre Uniquement",
-          opt_theme_3: "Bascule Utilisateur (Clair/Sombre)",
-          lbl_anim: "Niveau d'Animation",
-          opt_anim_1: "Statique (Le plus rapide)",
-          opt_anim_2: "Transitions Subtiles",
-          opt_anim_3: "Intensif (Effets de défilement, Parallax)",
-          s4_ind: "Étape 4 sur 4 — Fonctionnalités & Contexte",
-          lbl_features: "Fonctionnalités Requises",
-          chk_1: "Formulaire de Contact",
-          chk_2: "CMS / Blog",
-          chk_3: "Connexion Utilisateur",
-          chk_4: "Panier E-commerce",
-          chk_5: "Animations",
-          chk_6: "Éléments 3D",
-          lbl_context: "Contexte du Projet & Concurrents",
-          ph_context: "Dites-nous en plus sur vos objectifs...",
-          btn_submit: "Soumettre la Proposition",
-          alert_success: "Proposition soumise avec succès !",
-        },
-        ar: {
-          nav_home: "الرئيسية",
-          nav_why: "لماذا نحن",
-          nav_work: "الأعمال والمجالات",
-          nav_start: "ابدأ مشروعك",
-          nav_login: "تسجيل الدخول",
-          hero_title: "التميز <span>الرقمي</span>",
-          hero_subtitle:
-            "نصمم تجارب ويب غامرة وعالية الأداء للعلامات التجارية التي رفضت الاندماج مع البقية. تجاوز الحدود. اكسر القواعد.",
-          hero_btn: "ابدأ مشروعاً",
-          why_title: "لماذا تختارنا",
-          why_desc:
-            "نحن نجمع بين سرعة التطوير الفائقة، الدقة الجمالية الحديثة، والتصميم المرتكز على المستخدم.",
-          feat_1_title: "سرعة فائقة",
-          feat_1_desc:
-            "أكواد برمجية نظيفة ومحسنة يتم تحميلها فورياً، مما يضمن ظهوراً ممتازاً في محركات البحث وتفاعلاً سلساً.",
-          feat_2_title: "واجهات مخصصة",
-          feat_2_desc:
-            "واجهات تفاعلية متعددة الخطوات مصممة خصيصاً لزيادة معدلات التحويل وجذب انتباه المستخدمين.",
-          feat_3_title: "مستقبلية وقابلة للتوسع",
-          feat_3_desc:
-            "مصممة بمعايير حديثة وقوية وبنظم هيكلية قابلة للتطوير المستقبلي بسلاسة.",
-          work_title: "المجالات التي نبني لها",
-          work_desc:
-            "استكشف مختلف القطاعات الصناعية والهندسة الرقمية المتخصصة التي نقوم بتصميمها وتطويرها.",
-
-          dom_1_tag: "01 / التجارة الإلكترونية",
-          dom_1_title: "المتاجر الإلكترونية",
-          dom_1_desc:
-            "متاجر رقمية عالية التحويل تتميز بخطوات دفع سلسة، شبكات منتجات ديناميكية وأنظمة إدارة مخزون متقدمة.",
-          dom_1_f1: "دمج عربة التسوق والدفع الآمن",
-          dom_1_f2: "فلاتر المنتجات وتحسين البحث",
-          dom_1_f3: "تصميم متجاوب يعطي الأولوية للجوال",
-
-          dom_2_tag: "02 / الشركات",
-          dom_2_title: "وكالات الأعمال",
-          dom_2_desc:
-            "معارض أعمال ومواقع شركات أنيقة وموثوقة مصممة لبناء ثقة استثنائية وجذب عملاء ذوي قيمة عالية.",
-          dom_2_f1: "عروض تفاعلية للخدمات",
-          dom_2_f2: "معارض أعمال ديناميكية للعملاء",
-          dom_2_f3: "نماذج تجميع عملاء محتملين مدمجة",
-
-          dom_3_tag: "03 / الإبداع",
-          dom_3_title: "المعارض والمدونات",
-          dom_3_desc:
-            "منصات بصرية بارزة للمصممين والمبدعين والكتاب تتميز بحركات سلسة وخطوط عربية غامرة.",
-          dom_3_f1: "تخطيطات مبسطة",
-          dom_3_f2: "تكامل محتوى المدونات ونظام إدارة المحتوى",
-          dom_3_f3: "معارض وسائط عالية الدقة",
-
-          dom_4_tag: "04 / تطبيقات الويب",
-          dom_4_title: "منصات SaaS واللوحات",
-          dom_4_desc:
-            "تبيقات ويب رقمية معقدة ومحمية ببيانات الاعتماد مع معالجة فورية لحالة النظام وواجهات متعددة الخطوات.",
-          dom_4_f1: "إدارة تسجيل الدخول وحسابات المستخدمين",
-          dom_4_f2: "لوحات البيانات والتحليلات",
-          dom_4_f3: "مساعد النماذج التفاعلية",
-
-          dom_5_tag: "05 / الضيافة",
-          dom_5_title: "المطاعم والحجوزات",
-          dom_5_desc:
-            "مساحات رقمية جذابة للطعام والفعاليات وخدمات الحجز مع جدولة فورية وأنظمة قوائم طعام.",
-          dom_5_f1: "قوائم طعام رقمية تفاعلية",
-          dom_5_f2: "أنظمة الحجز والمواعيد الفورية",
-          dom_5_f3: "تكامل المواقع وأوقات العمل",
-
-          dom_6_tag: "06 / مخصص",
-          dom_6_title: "مشاريع متخصصة",
-          dom_6_desc:
-            "هل لديك مفهوم فريد في ذهنك؟ نحن نبتكر حلول ويب مصممة خصيصاً لتناسب متطلباتك بدقة متناهية.",
-          dom_6_f1: "ربط واجهات برمجة التطبيقات والأدوات المخصصة",
-          dom_6_f2: "تفاعلات دقيقة متقدمة",
-          dom_6_f3: "منطق وظيفي مصمم خصيصاً",
-
-          footer_copy: "&copy; 2026 sh studio. جميع الحقوق محفوظة.",
-          modal_close: "[ إغلاق X ]",
-          w1_title: "دعنا نحدد التفاصيل بدقة.",
-          w1_desc:
-            "نحتاج إلى فهم رؤيتك قبل أن نبدأ. انقر فوق متابعة لبدء عملية الإعداد والتخطيط.",
-          w1_li1: "<strong>صفحات الهبوط:</strong> تبدأ من 40,000 دج",
-          w1_li2: "<strong>التجارة الإلكترونية:</strong> تبدأ من 150,000 دج",
-          w1_li3: "<strong>تطبيقات الويب المخصصة:</strong> تبدأ من 300,000 دج+",
-          btn_continue: "متابعة",
-          s1_ind: "الخطوة 1 من 4 — الأساسيات",
-          lbl_client: "اسم العميل أو العلامة التجارية",
-          lbl_budget: "الميزانية المقدرة",
-          opt_budget_default: "اختر نطاق الميزانية",
-          s2_ind: "الخطوة 2 من 4 — التصميم الجمالي",
-          lbl_style: "طراز التصميم الأساسي",
-          opt_style_default: "اختر النمط الجمالي",
-          opt_style_1: "مبسط ونظيف",
-          opt_style_3: "شركات حديث",
-          opt_style_4: "حيوي وملون",
-          lbl_colors: "ألوان العلامة التجارية",
-          ph_colors: "مثال: أكواد الألوان أو الطابع العام",
-          s3_ind: "الخطوة 3 من 4 — التفاصيل التقنية",
-          lbl_theme: "تفضيل واجهة المستخدم",
-          opt_theme_1: "الوضع الفاتح فقط",
-          opt_theme_2: "الوضع الداكن فقط",
-          opt_theme_3: "تبديل المستخدم (فاتح/داكن)",
-          lbl_anim: "مستوى الرسوم المتحركة",
-          opt_anim_1: "ثابت (الأسرع)",
-          opt_anim_2: "انتقالات خفيفة",
-          opt_anim_3: "مكثف (تأثيرات التمرير والحركة)",
-          s4_ind: "الخطوة 4 من 4 — الميزات والسياق",
-          lbl_features: "الميزات المطلوبة",
-          chk_1: "نموذج اتصال",
-          chk_2: "مدونة / نظام محتوى",
-          chk_3: "تسجيل دخول المستخدمين",
-          chk_4: "عربة تسوق إلكترونية",
-          chk_5: "رسوم متحركة",
-          chk_6: "عناصر ثلاثية الأبعاد",
-          lbl_context: "سياق المشروع والمنافسين",
-          ph_context: "أخبرنا المزيد عما تريد تحقيقه...",
-          btn_submit: "إرسال المقترح",
-          alert_success: "تم إرسال المقترح بنجاح!",
-        },
-      };
-
-      function changeLanguage(lang) {
-        currentLang = lang;
-        const body = document.body;
-
-        if (lang === "ar") {
-          body.setAttribute("dir", "rtl");
-          body.setAttribute("lang", "ar");
-        } else {
-          body.setAttribute("dir", "ltr");
-          body.setAttribute("lang", lang);
+      /* INTRO MATRIX + DECRYPT */
+      (function () {
+        const canvas = document.getElementById("matrix-canvas"),
+          ctx = canvas.getContext("2d");
+        const loader = document.getElementById("matrix-loader");
+        const decryptEl = document.getElementById("decrypt-text");
+        const subEl = document.getElementById("decrypt-sub");
+        const fillEl = document.getElementById("decrypt-fill");
+        const finalText = "NOVA PROJECT";
+        const chars =
+          "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+        let fontSize = 14,
+          columns,
+          drops;
+        function resize() {
+          canvas.width = innerWidth;
+          canvas.height = innerHeight;
+          columns = Math.floor(canvas.width / fontSize);
+          drops = Array(columns).fill(1);
         }
-
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-          const key = el.getAttribute("data-i18n");
-          if (translations[lang][key]) {
-            el.innerHTML = translations[lang][key];
+        resize();
+        addEventListener("resize", resize);
+        function draw() {
+          ctx.fillStyle = "rgba(0,0,0,0.05)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#00ff41";
+          ctx.font = fontSize + "px monospace";
+          for (let i = 0; i < drops.length; i++) {
+            ctx.fillText(
+              chars[Math.floor(Math.random() * chars.length)],
+              i * fontSize,
+              drops[i] * fontSize,
+            );
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+              drops[i] = 0;
+            drops[i]++;
           }
-        });
-
-        document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
-          const key = el.getAttribute("data-i18n-ph");
-          if (translations[lang][key]) {
-            el.setAttribute("placeholder", translations[lang][key]);
+        }
+        const mid = setInterval(draw, 40);
+        let progress = 0,
+          total = 28;
+        const scramble = setInterval(() => {
+          progress++;
+          const pct = Math.min(progress / total, 1);
+          fillEl.style.width = pct * 100 + "%";
+          let d = "";
+          for (let i = 0; i < finalText.length; i++) {
+            if (finalText[i] === " ") d += " ";
+            else if (i < Math.floor(pct * finalText.length)) d += finalText[i];
+            else d += chars[Math.floor(Math.random() * chars.length)];
           }
-        });
+          decryptEl.textContent = d;
+          if (pct < 0.3) subEl.textContent = "bypassing firewall…";
+          else if (pct < 0.55) subEl.textContent = "decrypting payload…";
+          else if (pct < 0.8) subEl.textContent = "injecting sequence…";
+          else subEl.textContent = "access granted";
+          if (progress >= total) {
+            clearInterval(scramble);
+            decryptEl.textContent = finalText;
+            fillEl.style.width = "100%";
+            setTimeout(() => {
+              clearInterval(mid);
+              loader.classList.add("hidden");
+              startHeroAnim();
+              startHeroMatrix();
+            }, 700);
+          }
+        }, 90);
+      })();
 
-        document.getElementById("langSwitcher").value = lang;
+      /* HERO MATRIX RAIN (behind 3D) */
+      function startHeroMatrix() {
+        const canvas = document.getElementById("hero-matrix");
+        const ctx = canvas.getContext("2d");
+        const chars =
+          "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+        let fontSize = 15,
+          columns,
+          drops;
+        function resize() {
+          const hero = document.getElementById("hero");
+          canvas.width = hero.offsetWidth;
+          canvas.height = hero.offsetHeight;
+          columns = Math.floor(canvas.width / fontSize);
+          drops = Array(columns).fill(1);
+        }
+        resize();
+        addEventListener("resize", resize);
+        function draw() {
+          ctx.fillStyle = "rgba(10,10,10,0.08)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#00ff41";
+          ctx.font = fontSize + "px monospace";
+          for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.globalAlpha = 0.35 + Math.random() * 0.45;
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            ctx.globalAlpha = 1;
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+              drops[i] = 0;
+            drops[i]++;
+          }
+          requestAnimationFrame(draw);
+        }
+        draw();
       }
 
-      function openProjectModal() {
-        const modal = document.getElementById("project-modal");
-        modal.classList.add("active");
+      function startHeroAnim() {
+        document.querySelectorAll(".hero-title .line span").forEach((s, i) => {
+          setTimeout(
+            () => {
+              s.style.transition =
+                "transform 0.9s cubic-bezier(0.16,1,0.3,1),opacity 0.9s";
+              s.style.transform = "translateY(0)";
+              s.style.opacity = "1";
+            },
+            120 + i * 140,
+          );
+        });
+        setTimeout(() => {
+          const e = document.querySelector(".hero-eyebrow");
+          e.style.transition = "opacity 0.7s,transform 0.7s";
+          e.style.opacity = "1";
+          e.style.transform = "translateY(0)";
+        }, 80);
+        setTimeout(() => {
+          const e = document.querySelector(".hero-sub");
+          e.style.transition = "opacity 0.8s,transform 0.8s";
+          e.style.opacity = "1";
+          e.style.transform = "translateY(0)";
+        }, 700);
+        setTimeout(() => {
+          document.querySelector(".scroll-hint").style.transition =
+            "opacity 0.8s";
+          document.querySelector(".scroll-hint").style.opacity = "1";
+        }, 1100);
+      }
+
+      const modal = document.getElementById("contact-modal");
+      const formFields = document.getElementById("form-fields");
+      const formSuccess = document.getElementById("form-success");
+      const contactForm = document.getElementById("contact-form");
+      function openModal() {
+        formFields.classList.remove("hide");
+        formSuccess.classList.remove("show");
+        contactForm.reset();
+        modal.classList.add("open");
         document.body.style.overflow = "hidden";
       }
-
-      function closeProjectModal() {
-        const modal = document.getElementById("project-modal");
-        modal.classList.remove("active");
-        document.body.style.overflow = "auto";
-        setTimeout(() => {
-          document
-            .querySelectorAll(".form-step")
-            .forEach((step) => step.classList.remove("active"));
-          document.getElementById("step-1").classList.add("active");
-        }, 400);
+      function closeModal() {
+        modal.classList.remove("open");
+        document.body.style.overflow = "";
       }
+      document.getElementById("nav-contact-btn").onclick = openModal;
+      document.getElementById("cta-contact-btn").onclick = openModal;
+      document.getElementById("about-contact-btn").onclick = openModal;
+      document.getElementById("modal-close").onclick = closeModal;
+      document.getElementById("modal-cancel").onclick = closeModal;
+      modal.onclick = (e) => {
+        if (e.target === modal) closeModal();
+      };
+      document.onkeydown = (e) => {
+        if (e.key === "Escape" && modal.classList.contains("open"))
+          closeModal();
+      };
+      contactForm.onsubmit = (e) => {
+        e.preventDefault();
+        formFields.classList.add("hide");
+        formSuccess.classList.add("show");
+        setTimeout(closeModal, 2400);
+      };
 
-      function nextStep(stepNumber) {
-        document.querySelectorAll(".form-step").forEach((step) => {
-          step.classList.remove("active");
-        });
-        const targetStep = document.getElementById("step-" + stepNumber);
-        if (targetStep) {
-          targetStep.classList.add("active");
-        }
-      }
-
-      function validateAndNextStep(currentStepNum, nextStepNum) {
-        const clientInput = document.getElementById("clientNameInput");
-        if (currentStepNum === 2 && clientInput.value.trim() === "") {
-          clientInput.focus();
-          clientInput.style.borderBottomColor = "red";
+      (function () {
+        const container = document.getElementById("canvas-container");
+        if (!window.THREE) {
+          container.style.background = "transparent";
           return;
         }
-        clientInput.style.borderBottomColor = "var(--border-color)";
-        nextStep(nextStepNum);
-      }
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+          45,
+          innerWidth / innerHeight,
+          0.1,
+          100,
+        );
+        camera.position.z = 5.5;
+        const renderer = new THREE.WebGLRenderer({
+          antialias: true,
+          alpha: true,
+        });
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+        const knot = new THREE.Mesh(
+          new THREE.TorusKnotGeometry(1.1, 0.32, 180, 24),
+          new THREE.MeshStandardMaterial({
+            color: 0xc8ff00,
+            metalness: 0.7,
+            roughness: 0.25,
+            emissive: 0x1a2200,
+            emissiveIntensity: 0.4,
+          }),
+        );
+        scene.add(knot);
+        const wireMat = new THREE.MeshBasicMaterial({
+          color: 0xc8ff00,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.12,
+        });
+        const wire = new THREE.Mesh(
+          new THREE.TorusKnotGeometry(1.12, 0.33, 100, 12),
+          wireMat,
+        );
+        scene.add(wire);
+        const pos = new Float32Array(540);
+        for (let i = 0; i < 540; i++) pos[i] = (Math.random() - 0.5) * 12;
+        const pGeo = new THREE.BufferGeometry();
+        pGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        const pMat = new THREE.PointsMaterial({
+          color: 0xc8ff00,
+          size: 0.035,
+          transparent: true,
+          opacity: 0.55,
+          sizeAttenuation: true,
+        });
+        const particles = new THREE.Points(pGeo, pMat);
+        scene.add(particles);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+        const dir = new THREE.DirectionalLight(0xc8ff00, 1.2);
+        dir.position.set(4, 3, 5);
+        scene.add(dir);
+        const pt = new THREE.PointLight(0xc8ff00, 0.8, 20);
+        pt.position.set(-3, -2, 4);
+        scene.add(pt);
+        let mouseX = 0,
+          mouseY = 0,
+          targetScroll = 0,
+          smoothScroll = 0;
+        addEventListener("mousemove", (e) => {
+          mouseX = (e.clientX / innerWidth - 0.5) * 0.5;
+          mouseY = (e.clientY / innerHeight - 0.5) * 0.35;
+        });
+        function updateScroll() {
+          const max = Math.max(
+            document.documentElement.scrollHeight - innerHeight,
+            1,
+          );
+          const raw = scrollY / max;
+          const hp = Math.min(scrollY / (innerHeight * 1.2), 1);
+          targetScroll = hp * 0.75 + raw * 0.25;
+        }
+        addEventListener("scroll", updateScroll, { passive: true });
+        updateScroll();
+        (function animate() {
+          requestAnimationFrame(animate);
+          smoothScroll += (targetScroll - smoothScroll) * 0.075;
+          const t = Date.now() * 0.00035,
+            s = smoothScroll;
+          knot.rotation.x = t * 0.55 + s * Math.PI * 1.6 + mouseY * 0.45;
+          knot.rotation.y = t * 0.75 + s * Math.PI * 2.2 + mouseX * 0.7;
+          knot.rotation.z = s * Math.PI * 0.6;
+          const sc = 1 + s * 0.35;
+          knot.scale.setScalar(sc);
+          knot.position.set(s * 0.9, -s * 1.8, -s * 1.2);
+          wire.rotation.copy(knot.rotation);
+          wire.scale.copy(knot.scale);
+          wire.position.copy(knot.position);
+          wireMat.opacity = 0.12 * (1 - s * 0.6);
+          particles.rotation.y = t * 0.12 + s * 0.8;
+          particles.rotation.x = s * 0.4;
+          pMat.opacity = 0.55 * (1 - s * 0.5);
+          camera.position.x +=
+            (mouseX * 1.1 + s * 0.4 - camera.position.x) * 0.05;
+          camera.position.y +=
+            (-mouseY * 0.7 - s * 0.6 - camera.position.y) * 0.05;
+          camera.position.z = 5.5 + s * 1.5;
+          camera.lookAt(0, -s * 0.5, 0);
+          renderer.render(scene, camera);
+        })();
+        addEventListener("resize", () => {
+          camera.aspect = innerWidth / innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(innerWidth, innerHeight);
+          updateScroll();
+        });
+      })();
+
+      const opts = { threshold: 0.15, rootMargin: "0px 0px -40px 0px" };
+      const rev = new IntersectionObserver(
+        (es) =>
+          es.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          }),
+        opts,
+      );
+      document.querySelectorAll(".reveal").forEach((el) => rev.observe(el));
+      document
+        .querySelectorAll(".stat-card,.work-card,.award-block,.service-pill")
+        .forEach((el, i) => {
+          el.style.transitionDelay = (i % 6) * 0.08 + "s";
+          const o = new IntersectionObserver(
+            (es) =>
+              es.forEach((e) => {
+                if (e.isIntersecting) {
+                  e.target.style.opacity = "1";
+                  e.target.style.transform = e.target.classList.contains(
+                    "service-pill",
+                  )
+                    ? "scale(1)"
+                    : "translateY(0)";
+                  o.unobserve(e.target);
+                }
+              }),
+            opts,
+          );
+          o.observe(el);
+        });
+      const cnt = new IntersectionObserver(
+        (es) =>
+          es.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const el = e.target,
+              t = parseInt(el.dataset.count, 10);
+            let c = 0;
+            const step = Math.max(1, Math.ceil(t / 40));
+            const tm = setInterval(() => {
+              c += step;
+              if (c >= t) {
+                c = t;
+                clearInterval(tm);
+              }
+              el.textContent = c;
+            }, 30);
+            cnt.unobserve(el);
+          }),
+        { threshold: 0.5 },
+      );
+      document
+        .querySelectorAll("[data-count]")
+        .forEach((el) => cnt.observe(el));
     </script>
   </body>
 </html>
