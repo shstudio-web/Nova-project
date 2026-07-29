@@ -31,6 +31,7 @@
       }
       html {
         scroll-behavior: smooth;
+        background: #0a0a0a;
       }
       body {
         font-family: "Inter", system-ui, sans-serif;
@@ -41,7 +42,6 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* MATRIX INTRO */
       #matrix-loader {
         position: fixed;
         inset: 0;
@@ -160,7 +160,6 @@
         padding: 0 2rem 4rem;
         overflow: hidden;
       }
-      /* Hacking rain BEHIND the 3D model */
       #hero-matrix {
         position: absolute;
         inset: 0;
@@ -624,12 +623,12 @@
         transform: translateY(0);
       }
 
-      /* WINDOW MODAL */
+      /* ========== STEP-BY-STEP WINDOW MODAL ========== */
       .modal-overlay {
         position: fixed;
         inset: 0;
         z-index: 2000;
-        background: rgba(0, 0, 0, 0.78);
+        background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(12px);
         display: flex;
         align-items: center;
@@ -645,7 +644,7 @@
       }
       .window {
         width: 100%;
-        max-width: 560px;
+        max-width: 520px;
         max-height: 92vh;
         overflow: hidden;
         border-radius: 14px;
@@ -667,33 +666,16 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.7rem 1rem;
-        background: linear-gradient(180deg, #1a1a1a, #121212);
+        padding: 1rem 1.35rem;
+        background: #111;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         user-select: none;
       }
-      .window-dots {
-        display: flex;
-        gap: 0.45rem;
-      }
-      .window-dots span {
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-      }
-      .window-dots .r {
-        background: #ff5f57;
-      }
-      .window-dots .y {
-        background: #febc2e;
-      }
-      .window-dots .g {
-        background: #28c840;
-      }
       .window-title {
-        font-family: "Share Tech Mono", monospace;
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
         color: var(--text-muted);
       }
       .window-close-btn {
@@ -710,10 +692,74 @@
         color: var(--accent);
       }
       .window-body {
-        padding: 1.6rem 1.75rem 1.75rem;
+        padding: 1.5rem 1.65rem 1.65rem;
         overflow-y: auto;
         flex: 1;
       }
+
+      /* Progress steps */
+      .step-progress {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 1.5rem;
+      }
+      .step-dot {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        background: #0a0a0a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Inter", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: 0.3s;
+        flex-shrink: 0;
+      }
+      .step-dot.active {
+        border-color: var(--accent);
+        color: #000;
+        background: var(--accent);
+        box-shadow: 0 0 16px rgba(200, 255, 0, 0.35);
+      }
+      .step-dot.done {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(200, 255, 0, 0.12);
+      }
+      .step-line {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+        margin: 0 0.35rem;
+        transition: background 0.3s;
+      }
+      .step-line.done {
+        background: var(--accent);
+      }
+
+      .step-panel {
+        display: none;
+        animation: stepIn 0.35s ease;
+      }
+      .step-panel.active {
+        display: block;
+      }
+      @keyframes stepIn {
+        from {
+          opacity: 0;
+          transform: translateX(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
       .window-badge {
         display: inline-flex;
         align-items: center;
@@ -726,7 +772,7 @@
         border: 1px solid rgba(0, 255, 65, 0.3);
         padding: 0.3rem 0.7rem;
         border-radius: 4px;
-        margin-bottom: 1rem;
+        margin-bottom: 0.85rem;
       }
       .window-badge::before {
         content: "";
@@ -736,34 +782,22 @@
         background: var(--hack);
         box-shadow: 0 0 8px var(--hack);
       }
-      .window-body h3 {
+      .step-title {
         font-family: "Space Grotesk", sans-serif;
-        font-size: 1.55rem;
+        font-size: 1.4rem;
         font-weight: 700;
         letter-spacing: -0.02em;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.3rem;
       }
-      .window-sub {
+      .step-sub {
         color: var(--text-muted);
-        font-size: 0.92rem;
-        margin-bottom: 1.4rem;
-        line-height: 1.55;
+        font-size: 0.9rem;
+        margin-bottom: 1.25rem;
+        line-height: 1.5;
       }
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.9rem;
-      }
-      @media (max-width: 540px) {
-        .form-row {
-          grid-template-columns: 1fr;
-        }
-      }
+
       .form-group {
         margin-bottom: 1rem;
-      }
-      .form-group.full {
-        grid-column: 1 / -1;
       }
       .form-group label {
         display: block;
@@ -793,8 +827,14 @@
         border-color: var(--accent);
         box-shadow: 0 0 0 3px rgba(200, 255, 0, 0.12);
       }
+      .form-group input.error,
+      .form-group textarea.error,
+      .form-group select.error {
+        border-color: #ff5f57;
+        box-shadow: 0 0 0 3px rgba(255, 95, 87, 0.15);
+      }
       .form-group textarea {
-        min-height: 95px;
+        min-height: 110px;
         resize: vertical;
       }
       .form-group select {
@@ -810,45 +850,104 @@
         color: var(--text-muted);
         margin-top: 0.3rem;
       }
+      .error-msg {
+        font-size: 0.72rem;
+        color: #ff5f57;
+        margin-top: 0.3rem;
+        display: none;
+      }
+      .error-msg.show {
+        display: block;
+      }
+
+      .pay-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+        margin-top: 0.35rem;
+      }
+      .pay-option {
+        cursor: pointer;
+        display: block;
+      }
+      .pay-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .pay-card {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.75rem 0.85rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #0a0a0a;
+        transition: 0.2s;
+        font-size: 0.88rem;
+        color: var(--text);
+      }
+      .pay-option:hover .pay-card {
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .pay-option input:checked + .pay-card {
+        border-color: var(--accent);
+        background: rgba(200, 255, 0, 0.08);
+        box-shadow: 0 0 0 2px rgba(200, 255, 0, 0.15);
+      }
+      .pay-icon {
+        font-size: 1.15rem;
+        line-height: 1;
+      }
+      .pay-name {
+        font-weight: 500;
+      }
+
       .form-actions {
         display: flex;
         gap: 0.75rem;
-        margin-top: 0.5rem;
+        margin-top: 1.25rem;
+        align-items: center;
       }
-      .form-submit {
+      .form-actions .spacer {
         flex: 1;
+      }
+      .btn-back {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        padding: 0.8rem 1.15rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.2s;
+      }
+      .btn-back:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+        color: var(--text);
+      }
+      .btn-next,
+      .btn-submit {
         background: var(--accent);
         color: #000;
         font-weight: 700;
         font-size: 0.95rem;
-        padding: 0.9rem;
+        padding: 0.8rem 1.4rem;
         border: none;
         border-radius: 999px;
         cursor: pointer;
         font-family: inherit;
         transition: 0.2s;
       }
-      .form-submit:hover {
-        transform: scale(1.02);
+      .btn-next:hover,
+      .btn-submit:hover {
+        transform: scale(1.03);
         box-shadow: 0 0 28px rgba(200, 255, 0, 0.35);
       }
-      .form-secondary {
-        background: transparent;
-        border: 1px solid var(--border);
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        padding: 0.9rem 1.2rem;
-        border-radius: 999px;
-        cursor: pointer;
-        font-family: inherit;
-        transition: 0.2s;
-      }
-      .form-secondary:hover {
-        border-color: rgba(255, 255, 255, 0.25);
-        color: var(--text);
-      }
+
       .form-footer {
-        margin-top: 1.15rem;
+        margin-top: 1.1rem;
         text-align: center;
         font-size: 0.75rem;
         color: var(--text-muted);
@@ -857,10 +956,11 @@
         color: var(--accent);
         text-decoration: none;
       }
+
       .form-success {
         display: none;
         text-align: center;
-        padding: 2.5rem 0 1.5rem;
+        padding: 2rem 0 1rem;
       }
       .form-success.show {
         display: block;
@@ -878,8 +978,678 @@
         justify-content: center;
         margin: 0 auto 1.2rem;
       }
-      .form-fields.hide {
+      .form-wizard.hide {
         display: none;
+      }
+
+      .welcome-step {
+        text-align: center;
+        padding: 1.5rem 0.5rem 0.5rem;
+      }
+      .welcome-step .welcome-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: rgba(200, 255, 0, 0.1);
+        border: 1px solid rgba(200, 255, 0, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        font-size: 1.5rem;
+      }
+      .welcome-step h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.55rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+      }
+      .welcome-step p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.55;
+        max-width: 320px;
+        margin: 0 auto 1.75rem;
+      }
+      .btn-continue {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.95rem 2rem;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.2s;
+        min-width: 180px;
+      }
+      .btn-continue:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 32px rgba(200, 255, 0, 0.4);
+      }
+      .step-progress.hidden-progress {
+        display: none;
+      }
+
+      #portfolio {
+        background: var(--bg);
+        color: var(--text);
+      }
+      .portfolio-intro {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        max-width: 520px;
+        margin: -0.5rem 0 2.5rem;
+      }
+      .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem;
+      }
+      @media (max-width: 800px) {
+        .portfolio-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .portfolio-card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+        font: inherit;
+        padding: 0;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition:
+          border-color 0.3s,
+          transform 0.3s,
+          opacity 0.7s,
+          box-shadow 0.3s;
+      }
+      .portfolio-card:hover {
+        border-color: rgba(200, 255, 0, 0.35);
+        transform: translateY(-4px);
+      }
+      .portfolio-shot {
+        aspect-ratio: 16/10;
+        position: relative;
+        overflow: hidden;
+        background: #0d0d0d;
+      }
+      .portfolio-shot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .portfolio-card:hover .portfolio-shot img {
+        transform: scale(1.05);
+      }
+      .portfolio-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: 0.3s;
+      }
+      .portfolio-card:hover .portfolio-overlay {
+        opacity: 1;
+      }
+      .portfolio-overlay span {
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #000;
+        background: var(--accent);
+        padding: 0.55rem 1.1rem;
+        border-radius: 999px;
+      }
+      .portfolio-meta {
+        padding: 1.25rem 1.35rem 1.4rem;
+      }
+      .portfolio-meta h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+      .portfolio-meta p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin-bottom: 0.85rem;
+      }
+
+      /* Admin panel */
+      .admin-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 3000;
+        background: #0a0a0a;
+        display: none;
+        flex-direction: column;
+        overflow: auto;
+      }
+      .admin-overlay.open {
+        display: flex;
+      }
+      .admin-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        background: #111;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .admin-bar h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .admin-bar button {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      .admin-bar button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .admin-login {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .admin-login-box {
+        width: 100%;
+        max-width: 360px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+      }
+      .admin-login-box h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.25rem;
+        margin-bottom: 0.4rem;
+      }
+      .admin-login-box p {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 1.25rem;
+      }
+      .admin-login-box input {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 0.8rem 0.95rem;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        outline: none;
+        margin-bottom: 0.85rem;
+      }
+      .admin-login-box input:focus {
+        border-color: var(--accent);
+      }
+      .admin-login-box .btn-login {
+        width: 100%;
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        border: none;
+        border-radius: 999px;
+        padding: 0.85rem;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+      .admin-login-error {
+        color: #ff5f57;
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+        display: none;
+      }
+      .admin-login-error.show {
+        display: block;
+      }
+      .admin-list {
+        padding: 1.5rem;
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .admin-empty {
+        color: var(--text-muted);
+        text-align: center;
+        padding: 3rem 1rem;
+      }
+      .admin-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.25rem 1.4rem;
+        margin-bottom: 1rem;
+      }
+      .admin-card-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .admin-card h4 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.05rem;
+        margin-bottom: 0.35rem;
+      }
+      .admin-card .admin-email {
+        color: var(--accent);
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+      }
+      .admin-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.45rem 1.25rem;
+        font-size: 0.85rem;
+      }
+      @media (max-width: 560px) {
+        .admin-fields {
+          grid-template-columns: 1fr;
+        }
+      }
+      .admin-fields span {
+        color: var(--text-muted);
+      }
+      .admin-msg {
+        margin-top: 0.85rem;
+        padding-top: 0.85rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text);
+        white-space: pre-wrap;
+      }
+
+      /* Project detail modal */
+      .project-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2500;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.35s;
+      }
+      .project-modal-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .project-modal {
+        width: 100%;
+        max-width: 720px;
+        max-height: 90vh;
+        overflow-y: auto;
+        background: #0e0e0e;
+        border: 1px solid rgba(200, 255, 0, 0.22);
+        border-radius: 14px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+        transform: translateY(24px) scale(0.97);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .project-modal-overlay.open .project-modal {
+        transform: none;
+      }
+      .project-modal-hero {
+        aspect-ratio: 16/9;
+        background: #0d0d0d;
+        position: relative;
+        overflow: hidden;
+      }
+      .project-modal-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .project-modal-body {
+        padding: 1.5rem 1.65rem 1.75rem;
+      }
+      .project-modal-body h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .project-modal-body .pm-desc {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 1rem 0 1.25rem;
+      }
+      .project-modal-close {
+        position: absolute;
+        top: 0.85rem;
+        right: 0.85rem;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+      .project-modal-close:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .pm-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+      }
+      .pm-meta strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* Track panel */
+      .track-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2800;
+        background: #0a0a0a;
+        display: none;
+        flex-direction: column;
+        overflow: auto;
+      }
+      .track-overlay.open {
+        display: flex;
+      }
+      .track-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        background: #111;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .track-bar h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .track-bar button {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      .track-bar button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .track-inner {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 3rem;
+        width: 100%;
+      }
+      .track-login-box {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        margin-top: 2rem;
+      }
+      .track-login-box h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.3rem;
+        margin-bottom: 0.4rem;
+      }
+      .track-login-box p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.25rem;
+      }
+      .track-login-box input {
+        width: 100%;
+        background: #0a0a0a;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 0.8rem 0.95rem;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        outline: none;
+        margin-bottom: 0.85rem;
+      }
+      .track-login-box input:focus {
+        border-color: var(--accent);
+      }
+      .track-login-box .btn-track {
+        width: 100%;
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        border: none;
+        border-radius: 999px;
+        padding: 0.85rem;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+      .track-error {
+        color: #ff5f57;
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+        display: none;
+      }
+      .track-error.show {
+        display: block;
+      }
+
+      .track-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .track-card h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.35rem;
+        margin-bottom: 0.35rem;
+      }
+      .track-id {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--hack);
+        letter-spacing: 0.06em;
+        margin-bottom: 1rem;
+      }
+      .progress-wrap {
+        margin: 1.25rem 0 0.5rem;
+      }
+      .progress-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+      .progress-top .pct {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 1.15rem;
+      }
+      .progress-bar-bg {
+        height: 10px;
+        background: #1a1a1a;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #7a9e00, var(--accent));
+        border-radius: 999px;
+        transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 0 16px rgba(200, 255, 0, 0.35);
+      }
+      .track-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem 1.25rem;
+        font-size: 0.85rem;
+        margin-top: 1.15rem;
+        color: var(--text-muted);
+      }
+      .track-meta strong {
+        color: var(--text);
+        display: block;
+        font-weight: 500;
+        margin-top: 0.15rem;
+      }
+      @media (max-width: 520px) {
+        .track-meta {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .activity-list {
+        margin-top: 1.5rem;
+      }
+      .activity-list h4 {
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.85rem;
+      }
+      .activity-item {
+        display: flex;
+        gap: 0.85rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .activity-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-top: 0.35rem;
+        background: var(--border);
+        flex-shrink: 0;
+      }
+      .activity-dot.done {
+        background: var(--accent);
+        box-shadow: 0 0 8px rgba(200, 255, 0, 0.5);
+      }
+      .activity-dot.current {
+        background: var(--hack);
+        box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+      }
+      .activity-text {
+        flex: 1;
+      }
+      .activity-text .when {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.2rem;
+      }
+
+      .success-track-box {
+        margin-top: 1.25rem;
+        padding: 1rem;
+        background: rgba(200, 255, 0, 0.06);
+        border: 1px solid rgba(200, 255, 0, 0.25);
+        border-radius: 10px;
+        text-align: left;
+      }
+      .success-track-box p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+      }
+      .success-track-code {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 1.15rem;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        margin-bottom: 0.75rem;
+      }
+      .success-track-box button {
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      .success-track-box button:hover {
+        background: var(--accent);
+        color: #000;
+      }
+
+      nav .nav-track {
+        font-size: 0.875rem;
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
       }
     </style>
   </head>
@@ -899,7 +1669,9 @@
       <a href="#" class="logo">NOVA PROJECT</a>
       <div class="nav-right">
         <a href="#work">Work</a>
+        <a href="#portfolio">Portfolio</a>
         <a href="#services">Services</a>
+        <a href="#" class="nav-track" id="nav-track-btn">Track project</a>
         <button type="button" class="nav-cta" id="nav-contact-btn">
           Get in touch →
         </button>
@@ -907,7 +1679,6 @@
     </nav>
 
     <section class="hero" id="hero">
-      <!-- Hacking rain BEHIND the 3D model -->
       <canvas id="hero-matrix"></canvas>
       <div id="canvas-container"></div>
       <div class="hero-content">
@@ -1096,6 +1867,121 @@
       </div>
     </section>
 
+    <section id="portfolio">
+      <div class="container">
+        <p class="section-label reveal">Portfolio</p>
+        <h2 class="section-title reveal">Websites we built</h2>
+        <p class="portfolio-intro reveal">
+          Selected live sites designed and developed by the NOVA team — from
+          concept to launch.
+        </p>
+        <div class="portfolio-grid">
+          <button
+            type="button"
+            class="portfolio-card reveal"
+            data-project="lumina"
+          >
+            <div class="portfolio-shot">
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=80"
+                alt="Lumina Analytics"
+                loading="lazy"
+              />
+              <div class="portfolio-overlay"><span>View project</span></div>
+            </div>
+            <div class="portfolio-meta">
+              <h3>Lumina Analytics</h3>
+              <p>
+                SaaS dashboard & marketing site for a data platform. Custom
+                charts, dark UI, and WebGL hero.
+              </p>
+              <div class="work-tags">
+                <span class="tag accent">Design</span
+                ><span class="tag">Development</span
+                ><span class="tag">WebGL</span>
+              </div>
+            </div>
+          </button>
+          <button
+            type="button"
+            class="portfolio-card reveal"
+            data-project="forge"
+          >
+            <div class="portfolio-shot">
+              <img
+                src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=900&q=80"
+                alt="Forge Studio"
+                loading="lazy"
+              />
+              <div class="portfolio-overlay"><span>View project</span></div>
+            </div>
+            <div class="portfolio-meta">
+              <h3>Forge Studio</h3>
+              <p>
+                Agency portfolio with scroll-driven case studies and a real-time
+                3D product configurator.
+              </p>
+              <div class="work-tags">
+                <span class="tag accent">3D</span><span class="tag">Brand</span
+                ><span class="tag">Motion</span>
+              </div>
+            </div>
+          </button>
+          <button
+            type="button"
+            class="portfolio-card reveal"
+            data-project="northwind"
+          >
+            <div class="portfolio-shot">
+              <img
+                src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=900&q=80"
+                alt="Northwind Commerce"
+                loading="lazy"
+              />
+              <div class="portfolio-overlay"><span>View project</span></div>
+            </div>
+            <div class="portfolio-meta">
+              <h3>Northwind Commerce</h3>
+              <p>
+                High-converting e-commerce experience for a lifestyle brand —
+                headless checkout and editorial layouts.
+              </p>
+              <div class="work-tags">
+                <span class="tag">E-commerce</span><span class="tag">UX/UI</span
+                ><span class="tag">Development</span>
+              </div>
+            </div>
+          </button>
+          <button
+            type="button"
+            class="portfolio-card reveal"
+            data-project="orbit"
+          >
+            <div class="portfolio-shot">
+              <img
+                src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900&q=80"
+                alt="Orbit Mobile"
+                loading="lazy"
+              />
+              <div class="portfolio-overlay"><span>View project</span></div>
+            </div>
+            <div class="portfolio-meta">
+              <h3>Orbit Mobile</h3>
+              <p>
+                Product marketing site for a fintech app. Interactive device
+                mockups and conversion-focused storytelling.
+              </p>
+              <div class="work-tags">
+                <span class="tag accent">Product</span
+                ><span class="tag">Design</span
+                ><span class="tag">Strategy</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <section id="services">
       <div class="container">
         <p class="section-label reveal">What we do</p>
@@ -1187,9 +2073,9 @@
       <div class="footer-inner">
         <div class="footer-brand">NOVA PROJECT</div>
         <div class="footer-links">
-          <a href="#work">Work</a><a href="#services">Services</a
-          ><a href="#about">About</a><a href="#contact">Contact</a
-          ><a href="#">Privacy</a>
+          <a href="#work">Work</a><a href="#portfolio">Portfolio</a
+          ><a href="#services">Services</a><a href="#about">About</a
+          ><a href="#contact">Contact</a><a href="#">Privacy</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -1198,93 +2084,156 @@
       </div>
     </footer>
 
+    <!-- STEP-BY-STEP CONTACT MODAL -->
     <div class="modal-overlay" id="contact-modal">
       <div class="window">
         <div class="window-titlebar">
-          <div class="window-dots">
-            <span class="r"></span><span class="y"></span
-            ><span class="g"></span>
-          </div>
-          <div class="window-title">nova://contact — secure session</div>
-          <button type="button" class="window-close-btn" id="modal-close">
+          <div class="window-title">NOVA PROJECT — Contact</div>
+          <button
+            type="button"
+            class="window-close-btn"
+            id="modal-close"
+            aria-label="Close"
+          >
             ×
           </button>
         </div>
         <div class="window-body">
-          <div class="form-fields" id="form-fields">
-            <div class="window-badge">SECURE CHANNEL</div>
-            <h3>Start a project</h3>
-            <p class="window-sub">
-              Fill in the details. We reply within 24–48h with timeline, next
-              steps and a rough estimate.
-            </p>
-            <form id="contact-form">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="name">Name *</label
-                  ><input
-                    type="text"
-                    id="name"
-                    required
-                    placeholder="Alex Rivera"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="email">Email *</label
-                  ><input
-                    type="email"
-                    id="email"
-                    required
-                    placeholder="alex@company.com"
-                  />
-                </div>
+          <div class="form-wizard" id="form-wizard">
+            <!-- Progress (hidden on welcome) -->
+            <div class="step-progress hidden-progress" id="step-progress">
+              <div class="step-dot" data-step="1">1</div>
+              <div class="step-line" data-line="1"></div>
+              <div class="step-dot" data-step="2">2</div>
+              <div class="step-line" data-line="2"></div>
+              <div class="step-dot" data-step="3">3</div>
+              <div class="step-line" data-line="3"></div>
+              <div class="step-dot" data-step="4">4</div>
+            </div>
+
+            <!-- STEP 0: Welcome -->
+            <div class="step-panel active" data-step="0">
+              <div class="welcome-step">
+                <div class="welcome-icon">✦</div>
+                <h3>Wanna start a project?</h3>
+                <p>
+                  Tell us a few details and we’ll get back with a clear next
+                  step within 24–48 hours.
+                </p>
+                <button type="button" class="btn-continue" id="btn-continue">
+                  Continue →
+                </button>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="company">Company</label
-                  ><input type="text" id="company" placeholder="Your company" />
-                </div>
-                <div class="form-group">
-                  <label for="role">Your role</label>
-                  <select id="role">
-                    <option value="">Select…</option>
-                    <option>Founder / CEO</option>
-                    <option>Marketing</option>
-                    <option>Product</option>
-                    <option>Design</option>
-                    <option>Engineering</option>
-                    <option>Other</option>
-                  </select>
-                </div>
+            </div>
+
+            <!-- STEP 1: Who you are -->
+            <div class="step-panel" data-step="1">
+              <h3 class="step-title">Who are you?</h3>
+              <p class="step-sub">
+                A few basics so we know who we’re talking to.
+              </p>
+              <div class="form-group">
+                <label for="name">Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Alex Rivera"
+                  autocomplete="name"
+                />
+                <p class="error-msg" id="err-name">Please enter your name.</p>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="project-type">Project type</label>
-                  <select id="project-type">
-                    <option value="">Select…</option>
-                    <option>Brand identity</option>
-                    <option>Website / WebGL</option>
-                    <option>E-commerce</option>
-                    <option>Product design</option>
-                    <option>Motion / 3D</option>
-                    <option>Full digital experience</option>
-                    <option>Not sure yet</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="budget">Budget range</label>
-                  <select id="budget">
-                    <option value="">Select…</option>
-                    <option>Under $10k</option>
-                    <option>$10k – $25k</option>
-                    <option>$25k – $50k</option>
-                    <option>$50k – $100k</option>
-                    <option>$100k+</option>
-                    <option>Not sure yet</option>
-                  </select>
-                </div>
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="alex@company.com"
+                  autocomplete="email"
+                />
+                <p class="error-msg" id="err-email">
+                  Please enter a valid email.
+                </p>
               </div>
-              <div class="form-group full">
+              <div class="form-group">
+                <label for="company">Company</label>
+                <input
+                  type="text"
+                  id="company"
+                  placeholder="Your company (optional)"
+                />
+              </div>
+              <div class="form-actions">
+                <div class="spacer"></div>
+                <button type="button" class="btn-next" data-next="2">
+                  Next →
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2: Role & project type -->
+            <div class="step-panel" data-step="2">
+              <h3 class="step-title">Your role & project</h3>
+              <p class="step-sub">
+                What do you do, and what kind of work are you looking for?
+              </p>
+              <div class="form-group">
+                <label for="role">Your role</label>
+                <select id="role">
+                  <option value="">Select…</option>
+                  <option>Founder / CEO</option>
+                  <option>Marketing</option>
+                  <option>Product</option>
+                  <option>Design</option>
+                  <option>Engineering</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="project-type">Project type *</label>
+                <select id="project-type">
+                  <option value="">Select…</option>
+                  <option>Brand identity</option>
+                  <option>Website / WebGL</option>
+                  <option>E-commerce</option>
+                  <option>Product design</option>
+                  <option>Motion / 3D</option>
+                  <option>Full digital experience</option>
+                  <option>Not sure yet</option>
+                </select>
+                <p class="error-msg" id="err-project">
+                  Please choose a project type.
+                </p>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-back" data-back="1">
+                  ← Back
+                </button>
+                <div class="spacer"></div>
+                <button type="button" class="btn-next" data-next="3">
+                  Next →
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Budget, timeline & payment -->
+            <div class="step-panel" data-step="3">
+              <h3 class="step-title">Budget, timeline & payment</h3>
+              <p class="step-sub">
+                This helps us scope the right approach and preferred payment.
+              </p>
+              <div class="form-group">
+                <label for="budget">Budget range</label>
+                <select id="budget">
+                  <option value="">Select…</option>
+                  <option>Under $10k</option>
+                  <option>$10k – $25k</option>
+                  <option>$25k – $50k</option>
+                  <option>$50k – $100k</option>
+                  <option>$100k+</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="timeline">Ideal timeline</label>
                 <select id="timeline">
                   <option value="">Select…</option>
@@ -1295,20 +2244,78 @@
                   <option>Flexible</option>
                 </select>
               </div>
-              <div class="form-group full">
+              <div class="form-group">
+                <label>Preferred payment method</label>
+                <div class="pay-grid" id="pay-grid">
+                  <label class="pay-option">
+                    <input type="radio" name="payment" value="PayPal" />
+                    <span class="pay-card">
+                      <span class="pay-icon">🅿️</span>
+                      <span class="pay-name">PayPal</span>
+                    </span>
+                  </label>
+                  <label class="pay-option">
+                    <input type="radio" name="payment" value="Venmo" />
+                    <span class="pay-card">
+                      <span class="pay-icon">💙</span>
+                      <span class="pay-name">Venmo</span>
+                    </span>
+                  </label>
+                  <label class="pay-option">
+                    <input type="radio" name="payment" value="Visa / Card" />
+                    <span class="pay-card">
+                      <span class="pay-icon">💳</span>
+                      <span class="pay-name">Visa / Card</span>
+                    </span>
+                  </label>
+                  <label class="pay-option">
+                    <input type="radio" name="payment" value="Cash" />
+                    <span class="pay-card">
+                      <span class="pay-icon">💵</span>
+                      <span class="pay-name">Cash</span>
+                    </span>
+                  </label>
+                </div>
+                <p class="form-hint">
+                  Optional — we confirm payment details later.
+                </p>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-back" data-back="2">
+                  ← Back
+                </button>
+                <div class="spacer"></div>
+                <button type="button" class="btn-next" data-next="4">
+                  Next →
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 4: Message -->
+            <div class="step-panel" data-step="4">
+              <h3 class="step-title">Tell us more</h3>
+              <p class="step-sub">
+                Goals, audience, references — anything that helps us understand.
+              </p>
+              <div class="form-group">
                 <label for="message">Project details *</label>
                 <textarea
                   id="message"
-                  required
-                  placeholder="Goals, audience, references…"
+                  placeholder="What are you building? Goals, timeline, references…"
                 ></textarea>
-                <p class="form-hint">More context = better first reply.</p>
+                <p class="error-msg" id="err-message">
+                  Please add a short description.
+                </p>
+                <p class="form-hint">
+                  The more context you share, the better our first reply.
+                </p>
               </div>
               <div class="form-actions">
-                <button type="button" class="form-secondary" id="modal-cancel">
-                  Cancel
+                <button type="button" class="btn-back" data-back="3">
+                  ← Back
                 </button>
-                <button type="submit" class="form-submit">
+                <div class="spacer"></div>
+                <button type="button" class="btn-submit" id="btn-submit">
                   Send message →
                 </button>
               </div>
@@ -1318,17 +2325,116 @@
                   >hello@novaproject.example</a
                 >
               </p>
-            </form>
+            </div>
           </div>
+
           <div class="form-success" id="form-success">
             <div class="check">✓</div>
-            <h3>Message received</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem">
-              We’ll decrypt your brief and get back soon.
+            <h3 class="step-title">Message received</h3>
+            <p
+              style="
+                color: var(--text-muted);
+                font-size: 0.95rem;
+                margin-top: 0.4rem;
+              "
+            >
+              We’ll decrypt your brief and get back within 24–48 hours.
             </p>
+            <div class="success-track-box" id="success-track-box">
+              <p>Your project tracking code:</p>
+              <div class="success-track-code" id="success-track-code">—</div>
+              <p style="margin-bottom: 0.75rem">
+                Save this code. Use <strong>Track project</strong> in the menu
+                to follow progress from 0% → 100%.
+              </p>
+              <button type="button" id="open-track-from-success">
+                Open tracker →
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- PROJECT DETAIL MODAL -->
+    <div class="project-modal-overlay" id="project-modal">
+      <div class="project-modal" id="project-modal-inner">
+        <button
+          type="button"
+          class="project-modal-close"
+          id="project-modal-close"
+        >
+          ×
+        </button>
+        <div class="project-modal-hero"><img id="pm-img" src="" alt="" /></div>
+        <div class="project-modal-body">
+          <h2 id="pm-title"></h2>
+          <div class="work-tags" id="pm-tags"></div>
+          <div class="pm-meta" id="pm-meta"></div>
+          <p class="pm-desc" id="pm-desc"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENT PROJECT TRACKER -->
+    <div class="track-overlay" id="track-overlay">
+      <div class="track-bar">
+        <h2>NOVA — Project tracker</h2>
+        <button type="button" id="track-close">Close</button>
+      </div>
+      <div class="track-inner">
+        <div id="track-login">
+          <div class="track-login-box">
+            <h3>Track your project</h3>
+            <p>
+              Enter the tracking code you received after submitting a request.
+            </p>
+            <p class="track-error" id="track-error">
+              Code not found. Check and try again.
+            </p>
+            <input
+              type="text"
+              id="track-code-input"
+              placeholder="e.g. NOVA-A1B2C3"
+              autocomplete="off"
+            />
+            <button type="button" class="btn-track" id="track-lookup-btn">
+              View progress →
+            </button>
+          </div>
+        </div>
+        <div id="track-dashboard" style="display: none"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN (demo — password gated, data in localStorage) -->
+    <div class="admin-overlay" id="admin-overlay">
+      <div class="admin-bar">
+        <h2>NOVA — Inbox</h2>
+        <button type="button" id="admin-close">Close</button>
+      </div>
+      <div class="admin-login" id="admin-login">
+        <div class="admin-login-box">
+          <h3>Admin access</h3>
+          <p>
+            Enter the password to view contact submissions. Demo only — not
+            secure for production.
+          </p>
+          <p class="admin-login-error" id="admin-login-error">
+            Wrong password.
+          </p>
+          <input
+            type="password"
+            id="admin-password"
+            placeholder="Password"
+            autocomplete="current-password"
+          />
+          <button type="button" class="btn-login" id="admin-login-btn">
+            Unlock inbox
+          </button>
+        </div>
+      </div>
+      <div class="admin-list" id="admin-list" style="display: none"></div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1403,7 +2509,6 @@
         }, 90);
       })();
 
-      /* HERO MATRIX RAIN (behind 3D) */
       function startHeroMatrix() {
         const canvas = document.getElementById("hero-matrix");
         const ctx = canvas.getContext("2d");
@@ -1471,14 +2576,40 @@
         }, 1100);
       }
 
+      /* ========== STEP-BY-STEP FORM ========== */
       const modal = document.getElementById("contact-modal");
-      const formFields = document.getElementById("form-fields");
+      const formWizard = document.getElementById("form-wizard");
       const formSuccess = document.getElementById("form-success");
-      const contactForm = document.getElementById("contact-form");
+      let currentStep = 0;
+      const totalSteps = 4;
+
       function openModal() {
-        formFields.classList.remove("hide");
+        currentStep = 0;
+        goToStep(0);
+        formWizard.classList.remove("hide");
         formSuccess.classList.remove("show");
-        contactForm.reset();
+        [
+          "name",
+          "email",
+          "company",
+          "role",
+          "project-type",
+          "budget",
+          "timeline",
+          "message",
+        ].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.value = "";
+            el.classList.remove("error");
+          }
+        });
+        document
+          .querySelectorAll(".error-msg")
+          .forEach((e) => e.classList.remove("show"));
+        document.querySelectorAll('input[name="payment"]').forEach((r) => {
+          r.checked = false;
+        });
         modal.classList.add("open");
         document.body.style.overflow = "hidden";
       }
@@ -1486,25 +2617,620 @@
         modal.classList.remove("open");
         document.body.style.overflow = "";
       }
+
+      function goToStep(n) {
+        currentStep = n;
+        document.querySelectorAll(".step-panel").forEach((p) => {
+          p.classList.toggle("active", parseInt(p.dataset.step) === n);
+        });
+        const progress = document.getElementById("step-progress");
+        if (n === 0) {
+          progress.classList.add("hidden-progress");
+        } else {
+          progress.classList.remove("hidden-progress");
+          document.querySelectorAll(".step-dot").forEach((dot) => {
+            const s = parseInt(dot.dataset.step);
+            dot.classList.remove("active", "done");
+            if (s === n) dot.classList.add("active");
+            else if (s < n) dot.classList.add("done");
+          });
+          document.querySelectorAll(".step-line").forEach((line) => {
+            const s = parseInt(line.dataset.line);
+            line.classList.toggle("done", s < n);
+          });
+        }
+      }
+
+      function validateStep(step) {
+        let ok = true;
+        if (step === 1) {
+          const name = document.getElementById("name");
+          const email = document.getElementById("email");
+          name.classList.remove("error");
+          email.classList.remove("error");
+          document.getElementById("err-name").classList.remove("show");
+          document.getElementById("err-email").classList.remove("show");
+          if (!name.value.trim()) {
+            name.classList.add("error");
+            document.getElementById("err-name").classList.add("show");
+            ok = false;
+          }
+          if (
+            !email.value.trim() ||
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)
+          ) {
+            email.classList.add("error");
+            document.getElementById("err-email").classList.add("show");
+            ok = false;
+          }
+        }
+        if (step === 2) {
+          const pt = document.getElementById("project-type");
+          pt.classList.remove("error");
+          document.getElementById("err-project").classList.remove("show");
+          if (!pt.value) {
+            pt.classList.add("error");
+            document.getElementById("err-project").classList.add("show");
+            ok = false;
+          }
+        }
+        if (step === 4) {
+          const msg = document.getElementById("message");
+          msg.classList.remove("error");
+          document.getElementById("err-message").classList.remove("show");
+          if (!msg.value.trim()) {
+            msg.classList.add("error");
+            document.getElementById("err-message").classList.add("show");
+            ok = false;
+          }
+        }
+        return ok;
+      }
+
+      document
+        .getElementById("btn-continue")
+        .addEventListener("click", () => goToStep(1));
+
+      document.querySelectorAll(".btn-next").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const next = parseInt(btn.dataset.next);
+          if (validateStep(currentStep)) goToStep(next);
+        });
+      });
+      document.querySelectorAll(".btn-back").forEach((btn) => {
+        btn.addEventListener("click", () =>
+          goToStep(parseInt(btn.dataset.back)),
+        );
+      });
+      const ADMIN_PASSWORD = "nova-admin"; // change this — still client-side only
+      const STORAGE_KEY = "nova_contact_submissions";
+      // In-memory fallback when localStorage/sessionStorage are blocked (sandbox)
+      let memoryStore = [];
+      let memoryAdminOk = false;
+
+      function storageAvailable(type) {
+        try {
+          const s = window[type];
+          const k = "__nova_test__";
+          s.setItem(k, "1");
+          s.removeItem(k);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+      const hasLocal = storageAvailable("localStorage");
+      const hasSession = storageAvailable("sessionStorage");
+
+      function getSubmissions() {
+        if (!hasLocal) return memoryStore.slice();
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch (e) {
+          return memoryStore.slice();
+        }
+      }
+      function saveSubmission(data) {
+        const list = getSubmissions();
+        list.unshift(data);
+        memoryStore = list;
+        if (hasLocal) {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+          } catch (e) {}
+        }
+      }
+
+      const PROJECTS_KEY = "nova_projects";
+      function getProjects() {
+        if (!hasLocal) {
+          try {
+            return JSON.parse(sessionStorage.getItem(PROJECTS_KEY) || "[]");
+          } catch (e) {
+            return [];
+          }
+        }
+        try {
+          return JSON.parse(localStorage.getItem(PROJECTS_KEY) || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+      function saveProjects(list) {
+        const s = JSON.stringify(list);
+        if (hasLocal) {
+          try {
+            localStorage.setItem(PROJECTS_KEY, s);
+          } catch (e) {}
+        }
+        try {
+          sessionStorage.setItem(PROJECTS_KEY, s);
+        } catch (e) {}
+      }
+      function makeTrackCode() {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let code = "NOVA-";
+        for (let i = 0; i < 6; i++)
+          code += chars[Math.floor(Math.random() * chars.length)];
+        return code;
+      }
+      function timelineToDays(tl) {
+        const t = (tl || "").toLowerCase();
+        if (t.includes("asap") || t.includes("under 4")) return 28;
+        if (t.includes("1 – 2") || t.includes("1-2")) return 45;
+        if (t.includes("2 – 4") || t.includes("2-4")) return 90;
+        if (t.includes("4+")) return 150;
+        if (t.includes("flexible")) return 120;
+        return 60;
+      }
+      function calcProgress(project) {
+        if (typeof project.manualProgress === "number")
+          return Math.max(0, Math.min(100, project.manualProgress));
+        const start = new Date(project.date).getTime();
+        const days = project.totalDays || 60;
+        const elapsed = (Date.now() - start) / (1000 * 60 * 60 * 24);
+        return Math.max(1, Math.min(100, Math.round((elapsed / days) * 100)));
+      }
+      function buildActivity(project, pct) {
+        const start = new Date(project.date);
+        const days = project.totalDays || 60;
+        const milestones = [
+          {
+            at: 0,
+            title: "Request received",
+            desc: "Brief logged and assigned to the team.",
+          },
+          {
+            at: 15,
+            title: "Discovery & scope",
+            desc: "Goals, audience, and technical scope locked.",
+          },
+          {
+            at: 35,
+            title: "Design in progress",
+            desc: "Wireframes and visual direction underway.",
+          },
+          {
+            at: 55,
+            title: "Build phase",
+            desc: "Development and interactions being implemented.",
+          },
+          {
+            at: 75,
+            title: "Review & polish",
+            desc: "QA, content, and performance refinements.",
+          },
+          {
+            at: 100,
+            title: "Launch ready",
+            desc: "Site complete and ready to go live.",
+          },
+        ];
+        return milestones.map((m) => {
+          const dayOffset = Math.round((m.at / 100) * days);
+          const when = new Date(start.getTime() + dayOffset * 86400000);
+          let state = "todo";
+          if (pct >= m.at) state = "done";
+          else if (pct >= m.at - 10) state = "current";
+          return { ...m, when, state };
+        });
+      }
+
+      let lastTrackCode = "";
+      document.getElementById("btn-submit").addEventListener("click", () => {
+        if (!validateStep(4)) return;
+        const payment =
+          (document.querySelector('input[name="payment"]:checked') || {})
+            .value || "—";
+        const timeline =
+          document.getElementById("timeline").value || "Flexible";
+        const trackCode = makeTrackCode();
+        lastTrackCode = trackCode;
+        const payload = {
+          id: Date.now(),
+          trackCode,
+          date: new Date().toISOString(),
+          name: document.getElementById("name").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          company: document.getElementById("company").value.trim() || "—",
+          role: document.getElementById("role").value || "—",
+          projectType: document.getElementById("project-type").value || "—",
+          budget: document.getElementById("budget").value || "—",
+          timeline,
+          totalDays: timelineToDays(timeline),
+          payment,
+          message: document.getElementById("message").value.trim(),
+        };
+        saveSubmission(payload);
+        const projects = getProjects();
+        projects.unshift(payload);
+        saveProjects(projects);
+        document.getElementById("success-track-code").textContent = trackCode;
+        formWizard.classList.add("hide");
+        formSuccess.classList.add("show");
+        // don't auto-close so they can copy the code
+      });
+
+      document
+        .getElementById("open-track-from-success")
+        .addEventListener("click", () => {
+          closeModal();
+          openTrack(lastTrackCode);
+        });
+
+      /* Admin panel — open with keyboard: Ctrl+Shift+A  or  go to #admin */
+      const adminOverlay = document.getElementById("admin-overlay");
+      const adminLogin = document.getElementById("admin-login");
+      const adminList = document.getElementById("admin-list");
+      let adminUnlocked = false;
+      try {
+        if (hasSession && sessionStorage.getItem("nova_admin_ok") === "1")
+          adminUnlocked = true;
+        else if (memoryAdminOk) adminUnlocked = true;
+      } catch (e) {
+        adminUnlocked = memoryAdminOk;
+      }
+
+      function renderAdminList() {
+        const list = getSubmissions();
+        if (!list.length) {
+          adminList.innerHTML =
+            '<p class="admin-empty">No submissions yet. When someone uses Get in touch, they appear here.</p>';
+          return;
+        }
+        adminList.innerHTML = list
+          .map((s) => {
+            const when = new Date(s.date).toLocaleString();
+            return `<div class="admin-card">
+          <div class="admin-card-top"><span>${when}</span><span>${s.projectType}</span></div>
+          <h4>${escapeHtml(s.name)}</h4>
+          <div class="admin-email">${escapeHtml(s.email)}</div>
+          <div class="admin-fields">
+            <div><span>Company</span> ${escapeHtml(s.company)}</div>
+            <div><span>Role</span> ${escapeHtml(s.role)}</div>
+            <div><span>Budget</span> ${escapeHtml(s.budget)}</div>
+            <div><span>Timeline</span> ${escapeHtml(s.timeline)}</div>
+            <div><span>Payment</span> ${escapeHtml(s.payment)}</div>
+          </div>
+          <div class="admin-msg">${escapeHtml(s.message)}</div>
+        </div>`;
+          })
+          .join("");
+      }
+      function escapeHtml(str) {
+        return String(str || "").replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[m],
+        );
+      }
+      function openAdmin() {
+        adminOverlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+        if (adminUnlocked) {
+          adminLogin.style.display = "none";
+          adminList.style.display = "block";
+          renderAdminList();
+        } else {
+          adminLogin.style.display = "flex";
+          adminList.style.display = "none";
+          document.getElementById("admin-password").value = "";
+          document.getElementById("admin-login-error").classList.remove("show");
+        }
+      }
+      function closeAdmin() {
+        adminOverlay.classList.remove("open");
+        document.body.style.overflow = "";
+        if (location.hash === "#admin")
+          history.replaceState(null, "", location.pathname + location.search);
+      }
+      document.getElementById("admin-close").onclick = closeAdmin;
+      document.getElementById("admin-login-btn").onclick = () => {
+        const pw = document.getElementById("admin-password").value;
+        if (pw === ADMIN_PASSWORD) {
+          adminUnlocked = true;
+          memoryAdminOk = true;
+          if (hasSession) {
+            try {
+              sessionStorage.setItem("nova_admin_ok", "1");
+            } catch (e) {}
+          }
+          adminLogin.style.display = "none";
+          adminList.style.display = "block";
+          renderAdminList();
+        } else {
+          document.getElementById("admin-login-error").classList.add("show");
+        }
+      };
+      document
+        .getElementById("admin-password")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter")
+            document.getElementById("admin-login-btn").click();
+        });
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
+          e.preventDefault();
+          openAdmin();
+        }
+      });
+      function revealInSection(sel) {
+        const section = document.querySelector(sel);
+        if (!section) return;
+        section
+          .querySelectorAll(
+            ".reveal, .stat-card, .work-card, .award-block, .service-pill, .portfolio-card",
+          )
+          .forEach((el) => {
+            el.classList.add("visible");
+            el.style.opacity = "1";
+            el.style.transform = "none";
+          });
+      }
+      function handleHash() {
+        try {
+          const h = location.hash || "";
+          if (h === "#admin") openAdmin();
+          else if (adminOverlay.classList.contains("open") && h !== "#admin")
+            closeAdmin();
+          if (
+            h.toLowerCase() === "#track" ||
+            h.toLowerCase().startsWith("#track-") ||
+            h.toLowerCase().startsWith("#track/")
+          ) {
+            const code = h.replace(/^#track[-/]?/i, "").toUpperCase();
+            openTrack(code || "");
+          }
+          if (h && h !== "#admin" && !h.toLowerCase().startsWith("#track")) {
+            revealInSection(h);
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+      try {
+        handleHash();
+      } catch (err) {}
+      window.addEventListener("hashchange", handleHash);
+      // Nav clicks: reveal target section content so nothing stays invisible
+      document
+        .querySelectorAll('nav a[href^="#"], .footer-links a[href^="#"]')
+        .forEach((a) => {
+          a.addEventListener("click", () => {
+            const href = a.getAttribute("href");
+            if (href && href.startsWith("#") && href.length > 1) {
+              setTimeout(() => revealInSection(href), 50);
+            }
+          });
+        });
+
       document.getElementById("nav-contact-btn").onclick = openModal;
       document.getElementById("cta-contact-btn").onclick = openModal;
       document.getElementById("about-contact-btn").onclick = openModal;
       document.getElementById("modal-close").onclick = closeModal;
-      document.getElementById("modal-cancel").onclick = closeModal;
       modal.onclick = (e) => {
         if (e.target === modal) closeModal();
       };
       document.onkeydown = (e) => {
-        if (e.key === "Escape" && modal.classList.contains("open"))
-          closeModal();
-      };
-      contactForm.onsubmit = (e) => {
-        e.preventDefault();
-        formFields.classList.add("hide");
-        formSuccess.classList.add("show");
-        setTimeout(closeModal, 2400);
+        if (e.key !== "Escape") return;
+        if (modal.classList.contains("open")) closeModal();
+        if (projectModal.classList.contains("open")) closeProject();
+        if (trackOverlay.classList.contains("open")) closeTrack();
       };
 
+      /* ===== PORTFOLIO VIEW PROJECT ===== */
+      const PROJECTS_DATA = {
+        lumina: {
+          title: "Lumina Analytics",
+          img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80",
+          tags: ["Design", "Development", "WebGL"],
+          year: "2025",
+          role: "Lead design & front-end",
+          desc: "Full marketing site and product dashboard for a real-time analytics platform. We built a dark, high-density UI, custom charting system, and a WebGL hero that visualizes live data streams. The result: clearer product story and a 2.1× lift in trial sign-ups.",
+        },
+        forge: {
+          title: "Forge Studio",
+          img: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1200&q=80",
+          tags: ["3D", "Brand", "Motion"],
+          year: "2025",
+          role: "Brand + 3D experience",
+          desc: "Identity and portfolio for a product design studio. Scroll-driven case studies, real-time 3D product configurator, and a motion system that ties every page together. Designed to feel premium without slowing down.",
+        },
+        northwind: {
+          title: "Northwind Commerce",
+          img: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
+          tags: ["E-commerce", "UX/UI", "Development"],
+          year: "2024",
+          role: "UX & development",
+          desc: "Headless commerce experience for a lifestyle brand. Editorial product pages, fast checkout, and a content model that marketing can update without developers. Focused on conversion and storytelling in equal measure.",
+        },
+        orbit: {
+          title: "Orbit Mobile",
+          img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
+          tags: ["Product", "Design", "Strategy"],
+          year: "2024",
+          role: "Product marketing site",
+          desc: "Launch site for a fintech mobile app. Interactive device mockups, clear value props, and a conversion path tuned for waitlist growth. Strategy, design, and front-end delivered as one package.",
+        },
+      };
+      const projectModal = document.getElementById("project-modal");
+      function openProject(key) {
+        const p = PROJECTS_DATA[key];
+        if (!p) return;
+        document.getElementById("pm-img").src = p.img;
+        document.getElementById("pm-img").alt = p.title;
+        document.getElementById("pm-title").textContent = p.title;
+        document.getElementById("pm-desc").textContent = p.desc;
+        document.getElementById("pm-tags").innerHTML = p.tags
+          .map(
+            (t, i) =>
+              `<span class="tag${i === 0 ? " accent" : ""}">${t}</span>`,
+          )
+          .join("");
+        document.getElementById("pm-meta").innerHTML =
+          `<div><span>Year</span><br><strong>${p.year}</strong></div>
+         <div><span>Our role</span><br><strong>${p.role}</strong></div>`;
+        projectModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function closeProject() {
+        projectModal.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+      document
+        .querySelectorAll(".portfolio-card[data-project]")
+        .forEach((btn) => {
+          btn.addEventListener("click", () => openProject(btn.dataset.project));
+        });
+      document.getElementById("project-modal-close").onclick = closeProject;
+      projectModal.addEventListener("click", (e) => {
+        if (e.target === projectModal) closeProject();
+      });
+
+      /* ===== CLIENT TRACKER ===== */
+      const trackOverlay = document.getElementById("track-overlay");
+      const trackLogin = document.getElementById("track-login");
+      const trackDash = document.getElementById("track-dashboard");
+
+      function openTrack(prefill) {
+        trackOverlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+        trackLogin.style.display = "block";
+        trackDash.style.display = "none";
+        document.getElementById("track-error").classList.remove("show");
+        const input = document.getElementById("track-code-input");
+        input.value = prefill || "";
+        if (prefill) {
+          setTimeout(() => lookupTrack(), 50);
+        }
+      }
+      function closeTrack() {
+        trackOverlay.classList.remove("open");
+        document.body.style.overflow = "";
+        if (location.hash && location.hash.toLowerCase().startsWith("#track")) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+      }
+      function lookupTrack() {
+        const code = document
+          .getElementById("track-code-input")
+          .value.trim()
+          .toUpperCase();
+        const projects = getProjects();
+        const project = projects.find(
+          (p) => (p.trackCode || "").toUpperCase() === code,
+        );
+        if (!project) {
+          document.getElementById("track-error").classList.add("show");
+          return;
+        }
+        document.getElementById("track-error").classList.remove("show");
+        const pct = calcProgress(project);
+        const activity = buildActivity(project, pct);
+        const end = new Date(
+          new Date(project.date).getTime() +
+            (project.totalDays || 60) * 86400000,
+        );
+        trackLogin.style.display = "none";
+        trackDash.style.display = "block";
+        trackDash.innerHTML = `
+        <div class="track-card">
+          <div class="track-id">${escapeHtml(project.trackCode)}</div>
+          <h3>${escapeHtml(project.projectType)}</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.25rem;">For ${escapeHtml(project.name)} · ${escapeHtml(project.email)}</p>
+          <div class="progress-wrap">
+            <div class="progress-top">
+              <span>Overall progress</span>
+              <span class="pct">${pct}%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="track-meta">
+            <div>Timeline<strong>${escapeHtml(project.timeline)}</strong></div>
+            <div>Target window<strong>${project.totalDays || 60} days</strong></div>
+            <div>Started<strong>${new Date(project.date).toLocaleDateString()}</strong></div>
+            <div>Est. completion<strong>${end.toLocaleDateString()}</strong></div>
+            <div>Budget<strong>${escapeHtml(project.budget)}</strong></div>
+            <div>Status<strong>${pct >= 100 ? "Complete" : pct >= 75 ? "Polish" : pct >= 35 ? "In build" : "In progress"}</strong></div>
+          </div>
+        </div>
+        <div class="track-card activity-list">
+          <h4>Activity timeline</h4>
+          ${activity
+            .map(
+              (a) => `
+            <div class="activity-item">
+              <div class="activity-dot ${a.state === "done" ? "done" : a.state === "current" ? "current" : ""}"></div>
+              <div class="activity-text">
+                <div>${escapeHtml(a.title)}</div>
+                <div style="color:var(--text-muted);font-size:0.85rem;">${escapeHtml(a.desc)}</div>
+                <div class="when">${a.state === "done" || a.state === "current" ? a.when.toLocaleDateString() : "Est. " + a.when.toLocaleDateString()}</div>
+              </div>
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+        <p style="text-align:center;color:var(--text-muted);font-size:0.8rem;margin-top:1rem;">Progress advances automatically based on your selected timeline. Refresh anytime.</p>
+      `;
+      }
+      document.getElementById("track-lookup-btn").onclick = lookupTrack;
+      document
+        .getElementById("track-code-input")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter") lookupTrack();
+        });
+      document.getElementById("track-close").onclick = closeTrack;
+      document
+        .getElementById("nav-track-btn")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+          openTrack();
+        });
+
+      // hash #track or #track-NOVA-XXX
+      (function checkTrackHash() {
+        const h = (location.hash || "").toUpperCase();
+        if (
+          h === "#TRACK" ||
+          h.startsWith("#TRACK-") ||
+          h.startsWith("#TRACK/")
+        ) {
+          const code = h
+            .replace("#TRACK-", "")
+            .replace("#TRACK/", "")
+            .replace("#TRACK", "");
+          openTrack(code || "");
+        }
+      })();
+
+      /* THREE.JS */
       (function () {
         const container = document.getElementById("canvas-container");
         if (!window.THREE) {
